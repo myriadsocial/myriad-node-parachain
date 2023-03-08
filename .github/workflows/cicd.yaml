@@ -27,7 +27,7 @@ jobs:
           - 'clippy --all -- -D warnings'
           - 'fmt --all -- --check'
     runs-on: ubuntu-20.04
-    name: Test on nightly-2022-07-24 ( ${{ matrix.command }} )
+    name: Test on nightly-2023-02-07 ( ${{ matrix.command }} )
     steps:
       - name: Checkout Repository
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
@@ -39,7 +39,7 @@ jobs:
         uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af
         with:
           profile: minimal
-          toolchain: nightly-2022-07-24
+          toolchain: nightly-2023-02-07
           components: clippy, rustfmt
           target: wasm32-unknown-unknown
           override: true
@@ -64,7 +64,7 @@ jobs:
         uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af
         with:
           profile: minimal
-          toolchain: nightly-2022-07-24
+          toolchain: nightly-2023-02-07
           components: clippy, rustfmt
           target: wasm32-unknown-unknown
           override: true
