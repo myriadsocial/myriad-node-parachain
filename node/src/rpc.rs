@@ -7,7 +7,7 @@
 
 use std::sync::Arc;
 
-use parachain_template_runtime::{opaque::Block, AccountId, Balance, Index as Nonce};
+use myriad_runtime::{opaque::Block, AccountId, Balance, Index as Nonce};
 
 use sc_client_api::AuxStore;
 pub use sc_rpc::{DenyUnsafe, SubscriptionTaskExecutor};

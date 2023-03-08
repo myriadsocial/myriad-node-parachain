@@ -7,18 +7,18 @@ use frame_support::{
 	log, match_types, parameter_types,
 	traits::{Everything, Nothing},
 };
-use pallet_xcm::XcmPassthrough;
+use polkadot_pallet_xcm::XcmPassthrough;
 use polkadot_parachain::primitives::Sibling;
 use polkadot_runtime_common::impls::ToAuthor;
-use xcm::latest::{prelude::*, Weight as XCMWeight};
-use xcm_builder::{
+use polkadot_xcm::latest::{prelude::*, Weight as XCMWeight};
+use polkadot_xcm_builder::{
 	AccountId32Aliases, AllowTopLevelPaidExecutionFrom, AllowUnpaidExecutionFrom, CurrencyAdapter,
 	EnsureXcmOrigin, FixedWeightBounds, IsConcrete, LocationInverter, NativeAsset, ParentIsPreset,
 	RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
 	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
 	UsingComponents,
 };
-use xcm_executor::{traits::ShouldExecute, XcmExecutor};
+use polkadot_xcm_executor::{traits::ShouldExecute, XcmExecutor};
 
 parameter_types! {
 	pub const RelayLocation: MultiLocation = MultiLocation::parent();
@@ -87,8 +87,8 @@ match_types! {
 	};
 }
 
-//TODO: move DenyThenTry to polkadot's xcm module.
-/// Deny executing the xcm message if it matches any of the Deny filter regardless of anything else.
+//TODO: move DenyThenTry to polkadot's XCM module.
+/// Deny executing the XCM message if it matches any of the Deny filter regardless of anything else.
 /// If it passes the Deny, and matches one of the Allow cases then it is let through.
 pub struct DenyThenTry<Deny, Allow>(PhantomData<Deny>, PhantomData<Allow>)
 where
@@ -143,7 +143,7 @@ impl ShouldExecute for DenyReserveTransferToRelayChain {
 			message.0.iter().any(|inst| matches!(inst, ReserveAssetDeposited { .. }))
 		{
 			log::warn!(
-				target: "xcm::barriers",
+				target: "polkadot_xcm::barriers",
 				"Unexpected ReserveAssetDeposited from the Relay Chain",
 			);
 		}
@@ -163,7 +163,7 @@ pub type Barrier = DenyThenTry<
 >;
 
 pub struct XcmConfig;
-impl xcm_executor::Config for XcmConfig {
+impl polkadot_xcm_executor::Config for XcmConfig {
 	type RuntimeCall = RuntimeCall;
 	type XcmSender = XcmRouter;
 	// How to withdraw and deposit an asset.
@@ -194,7 +194,7 @@ pub type XcmRouter = (
 	XcmpQueue,
 );
 
-impl pallet_xcm::Config for Runtime {
+impl polkadot_pallet_xcm::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type SendXcmOrigin = EnsureXcmOrigin<RuntimeOrigin, LocalOriginToLocation>;
 	type XcmRouter = XcmRouter;
@@ -212,7 +212,7 @@ impl pallet_xcm::Config for Runtime {
 
 	const VERSION_DISCOVERY_QUEUE_SIZE: u32 = 100;
 	// ^ Override for AdvertisedXcmVersion default
-	type AdvertisedXcmVersion = pallet_xcm::CurrentXcmVersion;
+	type AdvertisedXcmVersion = polkadot_pallet_xcm::CurrentXcmVersion;
 }
 
 impl cumulus_pallet_xcm::Config for Runtime {

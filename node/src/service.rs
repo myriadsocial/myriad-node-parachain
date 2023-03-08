@@ -5,7 +5,7 @@ use std::{sync::Arc, time::Duration};
 
 use cumulus_client_cli::CollatorOptions;
 // Local Runtime Types
-use parachain_template_runtime::{opaque::Block, Hash, RuntimeApi};
+use myriad_runtime::{opaque::Block, Hash, RuntimeApi};
 
 // Cumulus Imports
 use cumulus_client_consensus_aura::{AuraConsensus, BuildAuraConsensusParams, SlotProportion};
@@ -37,11 +37,11 @@ impl sc_executor::NativeExecutionDispatch for ParachainNativeExecutor {
 	type ExtendHostFunctions = frame_benchmarking::benchmarking::HostFunctions;
 
 	fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
-		parachain_template_runtime::api::dispatch(method, data)
+		myriad_runtime::api::dispatch(method, data)
 	}
 
 	fn native_version() -> sc_executor::NativeVersion {
-		parachain_template_runtime::native_version()
+		myriad_runtime::native_version()
 	}
 }
 
@@ -57,6 +57,7 @@ type ParachainBlockImport = TParachainBlockImport<Block, Arc<ParachainClient>, P
 ///
 /// Use this macro if you don't actually need the full service, but just the builder in order to
 /// be able to perform chain operations.
+#[allow(clippy::type_complexity)]
 pub fn new_partial(
 	config: &Configuration,
 ) -> Result<
@@ -335,6 +336,7 @@ fn build_import_queue(
 	.map_err(Into::into)
 }
 
+#[allow(clippy::too_many_arguments)]
 fn build_consensus(
 	client: Arc<ParachainClient>,
 	block_import: ParachainBlockImport,
