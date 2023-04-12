@@ -30,7 +30,7 @@ jobs:
     name: Test on nightly-2023-02-07 ( ${{ matrix.command }} )
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+        uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247
         with:
           fetch-depth: 0
       - name: Install protobuf-compiler
@@ -55,7 +55,7 @@ jobs:
     name: Build
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+        uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247
         with:
           fetch-depth: 0
       - name: Install protobuf-compiler
@@ -86,11 +86,11 @@ jobs:
         uses: docker/setup-qemu-action@e81a89b1732b9c48d79cd809d8d81d79c4647a18
       - name: Set Up Docker Buildx
         id: set-up-buildx
-        uses: docker/setup-buildx-action@f03ac48505955848960e80bbb68046aa35c7b9e7
+        uses: docker/setup-buildx-action@c078ea33917ab8cfa5300e48f4b7e6b16606aede
         with:
           install: true
       - name: Cache Docker Layers
-        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -125,7 +125,7 @@ jobs:
     name: Release Please
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+        uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247
         with:
           fetch-depth: 0
       - name: Compute Version
