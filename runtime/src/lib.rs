@@ -197,7 +197,7 @@ impl WeightToFeePolynomial for WeightToFee {
 #[sp_version::runtime_version]
 pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("myriad"),
-	impl_name: create_runtime_str!("parachain"),
+	impl_name: create_runtime_str!("rococo-parachain"),
 	authoring_version: 1,
 	spec_version: 1,
 	impl_version: 0,
@@ -234,7 +234,7 @@ const NORMAL_DISPATCH_RATIO: Perbill = Perbill::from_percent(75);
 /// We allow for 0.5 of a second of compute with a 12 second average block time.
 const MAXIMUM_BLOCK_WEIGHT: Weight = Weight::from_parts(
 	WEIGHT_REF_TIME_PER_SECOND.saturating_div(2),
-	cumulus_primitives_core::relay_chain::v2::MAX_POV_SIZE as u64,
+	cumulus_primitives_core::relay_chain::MAX_POV_SIZE as u64,
 );
 
 /// The version information used to identify this runtime when compiled natively.
@@ -374,8 +374,6 @@ impl cumulus_pallet_collator_selection::Config for Runtime {
 
 impl pallet_authorship::Config for Runtime {
 	type FindAuthor = FindAccountFromAuthorIndex<Self, Aura>;
-	type UncleGenerations = ConstU32<0>;
-	type FilterUncle = ();
 	type EventHandler = (CollatorSelection,);
 }
 
@@ -405,6 +403,7 @@ impl cumulus_pallet_xcmp_queue::Config for Runtime {
 	type ControllerOrigin = EnsureRoot<AccountId>;
 	type ControllerOriginConverter = XcmOriginToTransactDispatchOrigin;
 	type ExecuteOverweightOrigin = EnsureRoot<AccountId>;
+	type PriceForSiblingDelivery = ();
 	type RuntimeEvent = RuntimeEvent;
 	type VersionWrapper = ();
 	type WeightInfo = ();
@@ -513,6 +512,7 @@ impl pallet_collective::Config<CouncilCollective> for Runtime {
 	type Proposal = RuntimeCall;
 	type RuntimeEvent = RuntimeEvent;
 	type RuntimeOrigin = RuntimeOrigin;
+	type SetMembersOrigin = EnsureRoot<AccountId>;
 	type WeightInfo = ();
 }
 
@@ -524,6 +524,7 @@ impl pallet_collective::Config<TechnicalCollective> for Runtime {
 	type Proposal = RuntimeCall;
 	type RuntimeEvent = RuntimeEvent;
 	type RuntimeOrigin = RuntimeOrigin;
+	type SetMembersOrigin = EnsureRoot<AccountId>;
 	type WeightInfo = ();
 }
 
@@ -588,6 +589,7 @@ impl pallet_democracy::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type Scheduler = Scheduler;
 	type Slash = ();
+	type SubmitOrigin = EnsureSigned<AccountId>;
 	// Any single technical committee member may veto a coming council proposal, however they can
 	// only do it once and it lasts only for the cooloff period.
 	type VetoOrigin = EnsureMember<AccountId, TechnicalCollective>;
@@ -679,7 +681,7 @@ extern crate frame_benchmarking;
 
 #[cfg(feature = "runtime-benchmarks")]
 mod benches {
-	define_benchmarks!(
+	frame_benchmarking::define_benchmarks!(
 		[frame_system, SystemBench::<Runtime>]
 		[pallet_balances, Balances]
 		[pallet_session, SessionBench::<Runtime>]
@@ -790,6 +792,12 @@ impl_runtime_apis! {
 		) -> pallet_transaction_payment::FeeDetails<Balance> {
 			TransactionPayment::query_fee_details(uxt, len)
 		}
+		fn query_weight_to_fee(weight: Weight) -> Balance {
+			TransactionPayment::weight_to_fee(weight)
+		}
+		fn query_length_to_fee(length: u32) -> Balance {
+			TransactionPayment::length_to_fee(length)
+		}
 	}
 
 	impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentCallApi<Block, Balance, RuntimeCall>
@@ -806,6 +814,12 @@ impl_runtime_apis! {
 			len: u32,
 		) -> pallet_transaction_payment::FeeDetails<Balance> {
 			TransactionPayment::query_call_fee_details(call, len)
+		}
+		fn query_weight_to_fee(weight: Weight) -> Balance {
+			TransactionPayment::weight_to_fee(weight)
+		}
+		fn query_length_to_fee(length: u32) -> Balance {
+			TransactionPayment::length_to_fee(length)
 		}
 	}
 

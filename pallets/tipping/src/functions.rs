@@ -25,14 +25,6 @@ impl<T: Config> Pallet<T> {
 		sender: &T::AccountId,
 		amount: &BalanceOf<T>,
 	) -> Result<FeeDetail<BalanceOf<T>>, Error<T>> {
-		let tx_fee_denom = 100u8
-			.checked_div(T::TransactionFee::get())
-			.filter(|value| value <= &100u8)
-			.ok_or(Error::<T>::InsufficientFee)?;
-
-		let fee: BalanceOf<T> = *amount / tx_fee_denom.saturated_into();
-		let total_transfer = *amount + fee;
-
 		let transferable_balance: BalanceOf<T> = if ft_identifier == b"native" {
 			let minimum_balance = CurrencyOf::<T>::minimum_balance();
 			let account_balance = CurrencyOf::<T>::free_balance(sender);
@@ -57,10 +49,19 @@ impl<T: Config> Pallet<T> {
 			asset_transferable_balance.saturated_into()
 		};
 
-		if total_transfer > transferable_balance {
+		if *amount > transferable_balance {
 			return Err(Error::<T>::InsufficientBalance)
 		}
 
+		let tx_fee_denom = 100u8
+			.checked_div(T::TransactionFee::get())
+			.filter(|value| value <= &100u8)
+			.ok_or(Error::<T>::InsufficientFee)?;
+
+		let fee: BalanceOf<T> = *amount / tx_fee_denom.saturated_into();
+		if fee > *amount {
+			return Err(Error::<T>::InsufficientBalance)
+		}
 		let admin_fee_denom = 100u8
 			.checked_div(T::AdminFee::get())
 			.filter(|value| value <= &100u8)
