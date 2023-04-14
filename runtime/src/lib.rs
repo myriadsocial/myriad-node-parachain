@@ -197,7 +197,7 @@ impl WeightToFeePolynomial for WeightToFee {
 #[sp_version::runtime_version]
 pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("myriad"),
-	impl_name: create_runtime_str!("rococo-parachain"),
+	impl_name: create_runtime_str!("parachain"),
 	authoring_version: 1,
 	spec_version: 1,
 	impl_version: 0,

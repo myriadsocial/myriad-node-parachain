@@ -21,7 +21,7 @@ cd $PROJECT_ROOT
 PALLET=$1
 FOLDER=$2
 
-cargo +nightly run --release --locked --features=runtime-benchmarks -- benchmark pallet \
+cargo run --release --locked --features=runtime-benchmarks -- benchmark pallet \
   --chain=dev \
   --execution=wasm \
   --wasm-execution=compiled \

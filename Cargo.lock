@@ -5014,7 +5014,7 @@ dependencies = [
 
 [[package]]
 name = "myriad"
-version = "2.3.6"
+version = "0.0.1"
 dependencies = [
  "clap",
  "cumulus-client-cli",
@@ -5072,7 +5072,7 @@ dependencies = [
 
 [[package]]
 name = "myriad-runtime"
-version = "2.3.6"
+version = "0.0.1"
 dependencies = [
  "cumulus-pallet-aura-ext",
  "cumulus-pallet-dmp-queue",
@@ -6159,7 +6159,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-server"
-version = "2.3.6"
+version = "0.0.1"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -6329,7 +6329,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-tipping"
-version = "2.3.6"
+version = "0.0.1"
 dependencies = [
  "frame-benchmarking",
  "frame-support",

@@ -6,7 +6,7 @@ homepage = 'https://myriad.social'
 license = 'AGPL-3.0'
 name = 'myriad'
 repository = 'https://github.com/myriadsocial/myriad-node'
-version = '2.3.6'
+version = '0.0.1'
 
 [build-dependencies]
 substrate-build-script-utils = { git = 'https://github.com/paritytech/substrate.git', 'branch' = 'polkadot-v0.9.40' }

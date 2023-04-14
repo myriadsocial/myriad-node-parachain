@@ -19,7 +19,7 @@ benchmarks! {
 
 		// Default balance
 		let balance = 1_000_000_000_000_000_000_000u128.saturated_into(); // 1000 MYRIA
-		let amount = 1_000_000_000_000_000_000u128.saturated_into(); // 1 MYRIA
+		let amount = 10_000_000_000_000_000_000u128.saturated_into(); // 10 MYRIA
 
 		// Caller initial balance
 		let _ = <T as Config>::Currency::deposit_creating(&caller, balance);
@@ -44,7 +44,7 @@ benchmarks! {
 
 		// Default balance
 		let balance = 1_000_000_000_000_000_000_000u128.saturated_into(); // 1000 MYRIA
-		let amount = 1_000_000_000_000_000_000u128.saturated_into(); // 1 MYRIA
+		let amount = 10_000_000_000_000_000_000u128.saturated_into(); // 10 MYRIA
 
 		// Caller initial balance
 		let _ = <T as Config>::Currency::deposit_creating(&caller, balance);
@@ -75,7 +75,7 @@ benchmarks! {
 
 		// Default balance
 		let balance = 1_000_000_000_000_000_000_000u128.saturated_into(); // 1000 MYRIA
-		let amount = 1_000_000_000_000_000_000u128.saturated_into(); // 1 MYRIA
+		let amount = 10_000_000_000_000_000_000u128.saturated_into(); // 10 MYRIA
 
 		// Caller initial balance
 		let _ = <T as Config>::Currency::deposit_creating(&caller, balance);
@@ -104,7 +104,7 @@ benchmarks! {
 
 		// Default balance
 		let balance = 1_000_000_000_000_000_000_000u128.saturated_into(); // 1000 MYRIA
-		let amount = 1_000_000_000_000_000_000u128.saturated_into(); // 1 MYRIA
+		let amount = 10_000_000_000_000_000_000u128.saturated_into(); // 10 MYRIA
 
 		// Caller initial balance
 		let _ = <T as Config>::Currency::deposit_creating(&caller, balance);
@@ -134,6 +134,7 @@ benchmarks! {
 		let tipping_amount = 10_000_000_000_000_000_000u128.saturated_into(); // 10 MYRIA
 
 		// Tipping_account_id, account_1, and account_2 initial balance
+		let _ = <T as Config>::Currency::deposit_creating(&caller, balance);
 		let _ = <T as Config>::Currency::deposit_creating(&account_1, balance);
 		let _ = <T as Config>::Currency::deposit_creating(&account_2, balance);
 		let _ = <T as Config>::Currency::deposit_creating(&tipping_account_id, balance);
