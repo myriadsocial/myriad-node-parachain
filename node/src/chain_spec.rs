@@ -80,10 +80,14 @@ pub fn get_properties(symbol: &str, decimals: u32, ss58format: u32) -> Propertie
 	properties
 }
 
-pub fn local_config() -> ChainSpec {
+pub fn rococo_config() -> Result<ChainSpec, String> {
+	ChainSpec::from_json_bytes(&include_bytes!("../res/rococo-parachain.json")[..])
+}
+
+pub fn local_config() -> Result<ChainSpec, String> {
 	let properties = get_properties("MYRIA", 18, 42);
 
-	ChainSpec::from_genesis(
+	Ok(ChainSpec::from_genesis(
 		// Name
 		"Myriad Local",
 		// ID
@@ -135,13 +139,13 @@ pub fn local_config() -> ChainSpec {
 			relay_chain: "rococo-local".into(), // You MUST set this to the correct network!
 			para_id: DEFAULT_PARA_ID.into(),
 		},
-	)
+	))
 }
 
-pub fn development_config() -> ChainSpec {
+pub fn development_config() -> Result<ChainSpec, String> {
 	let properties = get_properties("MYRIA", 18, 42);
 
-	ChainSpec::from_genesis(
+	Ok(ChainSpec::from_genesis(
 		// Name
 		"Myriad Development",
 		// ID
@@ -193,7 +197,7 @@ pub fn development_config() -> ChainSpec {
 			relay_chain: "rococo-local".into(), // You MUST set this to the correct network!
 			para_id: DEFAULT_PARA_ID.into(),
 		},
-	)
+	))
 }
 
 fn genesis(
