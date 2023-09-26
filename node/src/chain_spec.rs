@@ -5,14 +5,14 @@ use sc_service::{ChainType, GenericChainSpec, Properties};
 use sp_core::{sr25519, Pair, Public};
 use sp_runtime::traits::{IdentifyAccount, Verify};
 
-use polkadot_primitives::v2::LOWEST_PUBLIC_ID;
+use polkadot_primitives::LOWEST_PUBLIC_ID;
 
 use cumulus_primitives_core::ParaId;
 
 use myriad_runtime::{
 	currency::{EXISTENTIAL_DEPOSIT, UNITS as MYRIA},
 	AccountId, AuraId, Balance, BalancesConfig, CollatorSelectionConfig, CouncilConfig,
-	DemocracyConfig, GenesisConfig, ParachainInfoConfig, PolkadotXcmConfig, SessionConfig,
+	DemocracyConfig, RuntimeGenesisConfig, ParachainInfoConfig, PolkadotXcmConfig, SessionConfig,
 	SessionKeys, Signature, SudoConfig, SystemConfig, TechnicalCommitteeConfig, WASM_BINARY,
 };
 
@@ -21,7 +21,7 @@ const DEFAULT_PARA_ID: ParaId = LOWEST_PUBLIC_ID;
 const SAFE_XCM_VERSION: u32 = xcm::prelude::XCM_VERSION;
 
 /// Specialized `ChainSpec` for the normal parachain runtime.
-pub type ChainSpec = GenericChainSpec<GenesisConfig, Extensions>;
+pub type ChainSpec = GenericChainSpec<RuntimeGenesisConfig, Extensions>;
 type AccountPublic = <Signature as Verify>::Signer;
 
 /// The extensions for the [`ChainSpec`].
@@ -205,10 +205,11 @@ fn genesis(
 	initial_collators: Vec<(AccountId, AuraId)>,
 	endowed_accounts: Vec<(AccountId, Balance)>,
 	id: ParaId,
-) -> GenesisConfig {
-	GenesisConfig {
+) -> RuntimeGenesisConfig {
+	RuntimeGenesisConfig {
 		system: SystemConfig {
 			code: WASM_BINARY.expect("WASM binary was not build, please build it!").to_vec(),
+			..Default::default()
 		},
 		balances: BalancesConfig {
 			balances: endowed_accounts
@@ -232,8 +233,8 @@ fn genesis(
 		aura_ext: Default::default(),
 		transaction_payment: Default::default(),
 		parachain_system: Default::default(),
-		parachain_info: ParachainInfoConfig { parachain_id: id },
-		polkadot_xcm: PolkadotXcmConfig { safe_xcm_version: Some(SAFE_XCM_VERSION) },
+		parachain_info: ParachainInfoConfig { parachain_id: id, ..Default::default() },
+		polkadot_xcm: PolkadotXcmConfig { safe_xcm_version: Some(SAFE_XCM_VERSION), ..Default::default() },
 		assets: Default::default(),
 		democracy: DemocracyConfig::default(),
 		council: CouncilConfig { members: vec![], phantom: Default::default() },
