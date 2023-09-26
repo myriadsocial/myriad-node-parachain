@@ -120,7 +120,7 @@ std = [
 	'sp-std/std',
 	'sp-transaction-pool/std',
 	'sp-version/std',
-	"substrate-wasm-builder",
+	'substrate-wasm-builder',
 
 	# Polkadot Dependencies
 	'pallet-xcm/std',

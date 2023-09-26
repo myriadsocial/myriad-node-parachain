@@ -1,5 +1,6 @@
 use super::*;
 use frame_support::traits::{ExistenceRequirement, Get};
+use frame_system::pallet_prelude::BlockNumberFor;
 use sp_std::vec::Vec;
 
 impl<T: Config> ServerInterface<T> for Pallet<T> {
@@ -121,7 +122,7 @@ impl<T: Config> ServerInterface<T> for Pallet<T> {
 		Ok(())
 	}
 
-	fn unregister(server_id: u64, owner: &T::AccountId) -> Result<T::BlockNumber, Self::Error> {
+	fn unregister(server_id: u64, owner: &T::AccountId) -> Result<BlockNumberFor<T>, Self::Error> {
 		let server = ServerById::<T>::get(server_id)
 			.ok_or(Error::<T>::NotExists)?
 			.is_authorized(owner)
@@ -151,7 +152,7 @@ impl<T: Config> ServerInterface<T> for Pallet<T> {
 	fn cancel_unregister(
 		server_id: u64,
 		owner: &T::AccountId,
-	) -> Result<T::BlockNumber, Self::Error> {
+	) -> Result<BlockNumberFor<T>, Self::Error> {
 		let server = ServerById::<T>::get(server_id)
 			.ok_or(Error::<T>::NotExists)?
 			.is_authorized(owner)

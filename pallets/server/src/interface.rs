@@ -1,4 +1,5 @@
 use sp_std::vec::Vec;
+use frame_system::pallet_prelude::BlockNumberFor;
 
 pub trait ServerInfo<T: frame_system::Config> {
 	fn get_id(&self) -> u64;
@@ -31,10 +32,10 @@ pub trait ServerInterface<T: frame_system::Config> {
 		action: &Self::ActionType,
 	) -> Result<(), Self::Error>;
 
-	fn unregister(server_id: u64, owner: &T::AccountId) -> Result<T::BlockNumber, Self::Error>;
+	fn unregister(server_id: u64, owner: &T::AccountId) -> Result<BlockNumberFor<T>, Self::Error>;
 
 	fn cancel_unregister(
 		server_id: u64,
 		owner: &T::AccountId,
-	) -> Result<T::BlockNumber, Self::Error>;
+	) -> Result<BlockNumberFor<T>, Self::Error>;
 }
