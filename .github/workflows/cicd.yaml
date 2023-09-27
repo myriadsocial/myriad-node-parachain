@@ -1,12 +1,17 @@
 name: CI/CD
 
 on:
-  pull_request:
-    branches:
-      - main
-  push:
-    branches:
-      - main
+  #pull_request:
+    #branches:
+      #- main
+  #push:
+    #branches:
+      #- main
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Test Deploy"
+        default: "testnet"
 
 permissions:
   contents: read
