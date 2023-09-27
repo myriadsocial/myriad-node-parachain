@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   test:
-    #if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' }}
     strategy:
       fail-fast: false
       matrix:
