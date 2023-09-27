@@ -9,9 +9,10 @@ on:
       #- main
   workflow_dispatch:
     inputs:
-      name:
-        description: "Test Deploy"
-        default: "testnet"
+      refToBuild:
+        description: 'Commit SHA1 to build'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -62,7 +63,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
         with:
-          fetch-depth: 0
+          ref: ${{ inputs.refToBuild }}
+          #fetch-depth: 0
       - name: Install protobuf-compiler
         run: sudo apt install -y protobuf-compiler
       - name: Install toolchain
