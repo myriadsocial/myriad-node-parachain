@@ -71,7 +71,7 @@ jobs:
         uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af
         with:
           profile: minimal
-          toolchain: nightly-2023-01-01
+          toolchain: 1.70.0
           components: clippy, rustfmt
           target: wasm32-unknown-unknown
           override: true
