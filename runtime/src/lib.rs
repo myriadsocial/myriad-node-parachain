@@ -1,7 +1,7 @@
-//! The runtime. This can be compiled with `#[no_std]`, ready for Wasm.
 #![cfg_attr(not(feature = "std"), no_std)]
 // `construct_runtime!` does a lot of recursion and requires us to increase the limit to 256.
 #![recursion_limit = "256"]
+
 // Make the WASM binary available.
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
@@ -33,8 +33,8 @@ use frame_support::{
 	dispatch::DispatchClass,
 	parameter_types,
 	traits::{
-		AsEnsureOriginWithArg, ConstU16, ConstU32, ConstU64, ConstU8, EitherOfDiverse, Everything,
-		PrivilegeCmp,
+		ConstU16, ConstU32, ConstU64, ConstU8, EitherOfDiverse, Everything,
+		PrivilegeCmp, AsEnsureOriginWithArg
 	},
 	weights::{
 		constants::WEIGHT_REF_TIME_PER_SECOND, ConstantMultiplier, Weight, WeightToFeeCoefficient,
@@ -62,11 +62,11 @@ use xcm_config::{XcmConfig, XcmOriginToTransactDispatchOrigin};
 use polkadot_runtime_common::{BlockHashCount, SlowAdjustingFeeUpdate};
 
 // XCM Imports
-use polkadot_xcm::latest::prelude::BodyId;
-use polkadot_xcm_executor::XcmExecutor;
+use xcm::latest::prelude::BodyId;
+use xcm_executor::XcmExecutor;
 
 // Cumulus Imports
-use cumulus_pallet_collator_selection::IdentityCollator;
+use pallet_collator_selection::IdentityCollator;
 use cumulus_pallet_parachain_system::{ParachainSetCode, RelayNumberStrictlyIncreases};
 
 /// AssetId type as expected by this runtime.
@@ -79,6 +79,8 @@ pub type Moment = u64;
 pub type Index = u32;
 /// A hash of some data used by the chain.
 pub type Hash = H256;
+/// Index of a transaction in the chain.
+pub type Nonce = u32;
 /// An index to a block.
 pub type BlockNumber = u32;
 /// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
@@ -270,13 +272,12 @@ impl frame_system::Config for Runtime {
 	type BaseCallFilter = Everything;
 	type BlockHashCount = BlockHashCount;
 	type BlockLength = RuntimeBlockLength;
-	type BlockNumber = BlockNumber;
+	type Block = Block;
+	type Nonce = Nonce;
 	type BlockWeights = RuntimeBlockWeights;
 	type DbWeight = RocksDbWeight;
 	type Hash = Hash;
 	type Hashing = BlakeTwo256;
-	type Header = generic::Header<BlockNumber, BlakeTwo256>;
-	type Index = Index;
 	type Lookup = AccountIdLookup<AccountId, ()>;
 	type MaxConsumers = ConstU32<16>;
 	type OnKilledAccount = ();
@@ -294,6 +295,7 @@ impl frame_system::Config for Runtime {
 impl pallet_aura::Config for Runtime {
 	type AuthorityId = AuraId;
 	type DisabledValidators = ();
+	type AllowMultipleBlocksPerSlot = ();
 	type MaxAuthorities = ConstU32<100_000>;
 }
 
@@ -318,6 +320,10 @@ impl pallet_balances::Config for Runtime {
 	type ReserveIdentifier = [u8; 8];
 	type RuntimeEvent = RuntimeEvent;
 	type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
+	type RuntimeHoldReason = RuntimeHoldReason;
+	type FreezeIdentifier = ();
+	type MaxHolds = ConstU32<0>;
+	type MaxFreezes = ConstU32<0>;
 }
 
 parameter_types! {
@@ -356,10 +362,9 @@ parameter_types! {
 	pub const ExecutiveBody: BodyId = BodyId::Executive;
 }
 
-impl cumulus_pallet_collator_selection::Config for Runtime {
+impl pallet_collator_selection::Config for Runtime {
 	type Currency = Balances;
 	type MaxCandidates = ConstU32<1000>;
-	type MinCandidates = ConstU32<5>;
 	type MaxInvulnerables = ConstU32<100>;
 	// should be a multiple of session or things will get inconsistent
 	type KickThreshold = Period;
@@ -370,6 +375,7 @@ impl cumulus_pallet_collator_selection::Config for Runtime {
 	type ValidatorIdOf = IdentityCollator;
 	type ValidatorRegistration = Session;
 	type WeightInfo = ();
+	type MinEligibleCollators = ConstU32<4>;
 }
 
 impl pallet_authorship::Config for Runtime {
@@ -390,11 +396,11 @@ impl cumulus_pallet_parachain_system::Config for Runtime {
 	type ReservedDmpWeight = ReservedDmpWeight;
 	type ReservedXcmpWeight = ReservedXcmpWeight;
 	type RuntimeEvent = RuntimeEvent;
-	type SelfParaId = cumulus_pallet_parachain_info::Pallet<Runtime>;
+	type SelfParaId = parachain_info::Pallet<Runtime>;
 	type XcmpMessageHandler = XcmpQueue;
 }
 
-impl cumulus_pallet_parachain_info::Config for Runtime {}
+impl parachain_info::Config for Runtime {}
 
 impl cumulus_pallet_aura_ext::Config for Runtime {}
 
@@ -514,6 +520,7 @@ impl pallet_collective::Config<CouncilCollective> for Runtime {
 	type RuntimeOrigin = RuntimeOrigin;
 	type SetMembersOrigin = EnsureRoot<AccountId>;
 	type WeightInfo = ();
+	type MaxProposalWeight = ();
 }
 
 impl pallet_collective::Config<TechnicalCollective> for Runtime {
@@ -526,6 +533,7 @@ impl pallet_collective::Config<TechnicalCollective> for Runtime {
 	type RuntimeOrigin = RuntimeOrigin;
 	type SetMembersOrigin = EnsureRoot<AccountId>;
 	type WeightInfo = ();
+	type MaxProposalWeight = ();
 }
 
 parameter_types! {
@@ -601,6 +609,7 @@ impl pallet_democracy::Config for Runtime {
 impl pallet_sudo::Config for Runtime {
 	type RuntimeCall = RuntimeCall;
 	type RuntimeEvent = RuntimeEvent;
+	type WeightInfo = ();
 }
 
 // Local pallets
@@ -630,17 +639,14 @@ impl pallet_tipping::Config for Runtime {
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
-	pub enum Runtime where
-		Block = Block,
-		NodeBlock = opaque::Block,
-		UncheckedExtrinsic = UncheckedExtrinsic,
+	pub enum Runtime
 	{
 		// System support stuff.
 		System: frame_system = 0,
 		ParachainSystem: cumulus_pallet_parachain_system = 1,
 		Timestamp: pallet_timestamp = 2,
 		Scheduler: pallet_scheduler = 3,
-		ParachainInfo: cumulus_pallet_parachain_info = 4,
+		ParachainInfo: parachain_info = 4,
 		Preimage: pallet_preimage = 5,
 
 		// Monetary stuff.
@@ -650,14 +656,14 @@ construct_runtime!(
 
 		// Collator support. The order of these 4 are important and shall not change.
 		Authorship: pallet_authorship = 20,
-		CollatorSelection: cumulus_pallet_collator_selection = 21,
+		CollatorSelection: pallet_collator_selection = 21,
 		Session: pallet_session = 22,
 		Aura: pallet_aura = 23,
 		AuraExt: cumulus_pallet_aura_ext = 24,
 
 		// XCM helpers.
 		XcmpQueue: cumulus_pallet_xcmp_queue = 30,
-		PolkadotXcm: polkadot_pallet_xcm = 31,
+		PolkadotXcm: pallet_xcm = 31,
 		CumulusXcm: cumulus_pallet_xcm= 32,
 		DmpQueue: cumulus_pallet_dmp_queue = 33,
 
@@ -686,7 +692,7 @@ mod benches {
 		[pallet_balances, Balances]
 		[pallet_session, SessionBench::<Runtime>]
 		[pallet_timestamp, Timestamp]
-		[cumulus_pallet_collator_selection, CollatorSelection]
+		[pallet_collator_selection, CollatorSelection]
 		[cumulus_pallet_xcmp_queue, XcmpQueue]
 		[pallet_server, Server]
 		[pallet_tipping, Tipping]
@@ -721,6 +727,14 @@ impl_runtime_apis! {
 	impl sp_api::Metadata<Block> for Runtime {
 		fn metadata() -> OpaqueMetadata {
 			OpaqueMetadata::new(Runtime::metadata().into())
+		}
+
+		fn metadata_at_version(version: u32) -> Option<OpaqueMetadata> {
+			Runtime::metadata_at_version(version)
+		}
+
+		fn metadata_versions() -> sp_std::vec::Vec<u32> {
+			Runtime::metadata_versions()
 		}
 	}
 
