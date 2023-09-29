@@ -33,8 +33,8 @@ use frame_support::{
 	dispatch::DispatchClass,
 	parameter_types,
 	traits::{
-		ConstU16, ConstU32, ConstU64, ConstU8, EitherOfDiverse, Everything,
-		PrivilegeCmp, AsEnsureOriginWithArg
+		AsEnsureOriginWithArg, ConstU16, ConstU32, ConstU64, ConstU8, EitherOfDiverse, Everything,
+		PrivilegeCmp,
 	},
 	weights::{
 		constants::WEIGHT_REF_TIME_PER_SECOND, ConstantMultiplier, Weight, WeightToFeeCoefficient,
@@ -66,8 +66,8 @@ use xcm::latest::prelude::BodyId;
 use xcm_executor::XcmExecutor;
 
 // Cumulus Imports
-use pallet_collator_selection::IdentityCollator;
 use cumulus_pallet_parachain_system::{ParachainSetCode, RelayNumberStrictlyIncreases};
+use pallet_collator_selection::IdentityCollator;
 
 /// AssetId type as expected by this runtime.
 pub type AssetId = u32;
@@ -477,7 +477,7 @@ parameter_types! {
 impl PrivilegeCmp<OriginCaller> for OriginPrivilegeCmp {
 	fn cmp_privilege(left: &OriginCaller, right: &OriginCaller) -> Option<Ordering> {
 		if left == right {
-			return Some(Ordering::Equal)
+			return Some(Ordering::Equal);
 		}
 
 		match (left, right) {

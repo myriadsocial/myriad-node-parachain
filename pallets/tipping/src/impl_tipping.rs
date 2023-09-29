@@ -23,7 +23,7 @@ impl<T: Config> TippingInterface<T> for Pallet<T> {
 	) -> Result<Self::Receipt, Self::Error> {
 		if let Some(receiver) = receiver {
 			if sender == receiver {
-				return Err(DispatchError::BadOrigin)
+				return Err(DispatchError::BadOrigin);
 			}
 		}
 
@@ -48,7 +48,7 @@ impl<T: Config> TippingInterface<T> for Pallet<T> {
 			Self::do_transfer(ft_identifier, sender, &escrow_id, total_fee)?;
 		} else {
 			if account_reference.is_none() {
-				return Err(DispatchError::BadOrigin)
+				return Err(DispatchError::BadOrigin);
 			}
 
 			let account_reference = account_reference.as_ref().unwrap();
@@ -82,7 +82,7 @@ impl<T: Config> TippingInterface<T> for Pallet<T> {
 
 		WithdrawalBalance::<T>::translate(|ft: Vec<u8>, amount: BalanceOf<T>| {
 			if amount.is_zero() {
-				return None
+				return None;
 			}
 
 			let result = Self::do_transfer(&ft, sender, receiver, amount);
@@ -157,7 +157,7 @@ impl<T: Config> TippingInterface<T> for Pallet<T> {
 			let can_claim_tip = Self::can_claim_tip(&tips_balance_key, receiver);
 
 			if can_claim_tip.is_none() {
-				continue
+				continue;
 			}
 
 			let tips_balance = can_claim_tip.unwrap();
@@ -189,11 +189,11 @@ impl<T: Config> TippingInterface<T> for Pallet<T> {
 		let account_ref_ids = account_references.get_reference_ids().clone();
 
 		if receiver == account_id {
-			return Err(DispatchError::BadOrigin)
+			return Err(DispatchError::BadOrigin);
 		}
 
 		if account_ref_ids.is_empty() {
-			return Err(DispatchError::BadOrigin)
+			return Err(DispatchError::BadOrigin);
 		}
 
 		// Pay Fee to Server Admin

@@ -50,7 +50,7 @@ impl<T: Config> Pallet<T> {
 		};
 
 		if *amount > transferable_balance {
-			return Err(Error::<T>::InsufficientBalance)
+			return Err(Error::<T>::InsufficientBalance);
 		}
 
 		let tx_fee_denom = 100u8
@@ -60,7 +60,7 @@ impl<T: Config> Pallet<T> {
 
 		let fee: BalanceOf<T> = *amount / tx_fee_denom.saturated_into();
 		if fee > *amount {
-			return Err(Error::<T>::InsufficientBalance)
+			return Err(Error::<T>::InsufficientBalance);
 		}
 		let admin_fee_denom = 100u8
 			.checked_div(T::AdminFee::get())
@@ -76,18 +76,18 @@ impl<T: Config> Pallet<T> {
 
 	pub fn can_pay_fee(key: &TipsBalanceKeyOf<T>, tx_fee: &BalanceOf<T>) -> Result<(), Error<T>> {
 		if tx_fee == &Zero::zero() {
-			return Err(Error::<T>::InsufficientBalance)
+			return Err(Error::<T>::InsufficientBalance);
 		}
 
 		let tips_balance = Self::tips_balance_by_reference(key).ok_or(Error::<T>::NotExists)?;
 		let amount = tips_balance.get_amount();
 
 		if amount == &Zero::zero() {
-			return Err(Error::<T>::InsufficientBalance)
+			return Err(Error::<T>::InsufficientBalance);
 		}
 
 		if amount < tx_fee {
-			return Err(Error::<T>::InsufficientBalance)
+			return Err(Error::<T>::InsufficientBalance);
 		}
 
 		Ok(())
@@ -99,18 +99,18 @@ impl<T: Config> Pallet<T> {
 	) -> Option<TipsBalanceOf<T>> {
 		if let Some(tips_balance) = Self::tips_balance_by_reference(key) {
 			if tips_balance.get_amount() == &Zero::zero() {
-				return None
+				return None;
 			}
 
 			if tips_balance.get_account_id().is_none() {
-				return None
+				return None;
 			}
 
 			if tips_balance.get_account_id().as_ref().unwrap() != receiver {
-				return None
+				return None;
 			}
 
-			return Some(tips_balance)
+			return Some(tips_balance);
 		}
 
 		None

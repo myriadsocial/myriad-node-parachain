@@ -1,9 +1,9 @@
 //! Service and ServiceFactory implementation. Specialized wrapper over substrate service.
 
 // std
-use std::{sync::Arc, time::Duration};
 use sc_client_api::Backend;
 use sc_transaction_pool_api::OffchainTransactionPoolFactory;
+use std::{sync::Arc, time::Duration};
 
 use cumulus_client_cli::CollatorOptions;
 // Local Runtime Types

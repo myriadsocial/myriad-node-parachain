@@ -53,8 +53,9 @@ impl SubstrateCli for Cli {
 			"dev" => Box::new(chain_spec::development_config()?),
 			"local" | "" => Box::new(chain_spec::local_config()?),
 			"rococo" => Box::new(chain_spec::rococo_config()?),
-			path =>
-				Box::new(chain_spec::ChainSpec::from_json_file(std::path::PathBuf::from(path))?),
+			path => {
+				Box::new(chain_spec::ChainSpec::from_json_file(std::path::PathBuf::from(path))?)
+			},
 		})
 	}
 }
@@ -177,14 +178,15 @@ pub fn run() -> Result<()> {
 			let runner = cli.create_runner(cmd)?;
 			// Switch on the concrete benchmark sub-command-
 			match cmd {
-				BenchmarkCmd::Pallet(cmd) =>
+				BenchmarkCmd::Pallet(cmd) => {
 					if cfg!(feature = "runtime-benchmarks") {
 						runner.sync_run(|config| cmd.run::<Block, ()>(config))
 					} else {
 						Err("Benchmarking wasn't enabled when building the node. \
 					You can enable it with `--features runtime-benchmarks`."
 							.into())
-					},
+					}
+				},
 				BenchmarkCmd::Block(cmd) => runner.sync_run(|config| {
 					let partials = new_partial(&config)?;
 					cmd.run(partials.client)
@@ -202,8 +204,9 @@ pub fn run() -> Result<()> {
 					let storage = partials.backend.expose_storage();
 					cmd.run(config, partials.client.clone(), db, storage)
 				}),
-				BenchmarkCmd::Machine(cmd) =>
-					runner.sync_run(|config| cmd.run(&config, SUBSTRATE_REFERENCE_HARDWARE.clone())),
+				BenchmarkCmd::Machine(cmd) => {
+					runner.sync_run(|config| cmd.run(&config, SUBSTRATE_REFERENCE_HARDWARE.clone()))
+				},
 				// NOTE: this allows the Client to leniently implement
 				// new benchmark commands without requiring a companion MR.
 				#[allow(unreachable_patterns)]
@@ -248,11 +251,12 @@ pub fn run() -> Result<()> {
 			let collator_options = cli.run.collator_options();
 
 			runner.run_node_until_exit(|config| async move {
-				let hwbench = (!cli.no_hardware_benchmarks).then_some(
-					config.database.path().map(|database_path| {
+				let hwbench = (!cli.no_hardware_benchmarks)
+					.then_some(config.database.path().map(|database_path| {
 						let _ = std::fs::create_dir_all(database_path);
 						sc_sysinfo::gather_hwbench(Some(database_path))
-					})).flatten();
+					}))
+					.flatten();
 
 				let para_id = chain_spec::Extensions::try_get(&*config.chain_spec)
 					.map(|e| e.para_id)
@@ -266,7 +270,9 @@ pub fn run() -> Result<()> {
 				let id = ParaId::from(para_id);
 
 				let parachain_account =
-					AccountIdConversion::<polkadot_primitives::AccountId>::into_account_truncating(&id);
+					AccountIdConversion::<polkadot_primitives::AccountId>::into_account_truncating(
+						&id,
+					);
 
 				let tokio_handle = config.tokio_handle.clone();
 				let polkadot_config =
@@ -276,8 +282,8 @@ pub fn run() -> Result<()> {
 				info!("Parachain Account: {parachain_account}");
 				info!("Is collating: {}", if config.role.is_authority() { "yes" } else { "no" });
 
-				if !collator_options.relay_chain_rpc_urls.is_empty() &&
-					!cli.relay_chain_args.is_empty()
+				if !collator_options.relay_chain_rpc_urls.is_empty()
+					&& !cli.relay_chain_args.is_empty()
 				{
 					warn!(
 						"Detected relay chain node arguments together with --relay-chain-rpc-url. \

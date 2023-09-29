@@ -12,7 +12,7 @@ use cumulus_primitives_core::ParaId;
 use myriad_runtime::{
 	currency::{EXISTENTIAL_DEPOSIT, UNITS as MYRIA},
 	AccountId, AuraId, Balance, BalancesConfig, CollatorSelectionConfig, CouncilConfig,
-	DemocracyConfig, RuntimeGenesisConfig, ParachainInfoConfig, PolkadotXcmConfig, SessionConfig,
+	DemocracyConfig, ParachainInfoConfig, PolkadotXcmConfig, RuntimeGenesisConfig, SessionConfig,
 	SessionKeys, Signature, SudoConfig, SystemConfig, TechnicalCommitteeConfig, WASM_BINARY,
 };
 
@@ -234,7 +234,10 @@ fn genesis(
 		transaction_payment: Default::default(),
 		parachain_system: Default::default(),
 		parachain_info: ParachainInfoConfig { parachain_id: id, ..Default::default() },
-		polkadot_xcm: PolkadotXcmConfig { safe_xcm_version: Some(SAFE_XCM_VERSION), ..Default::default() },
+		polkadot_xcm: PolkadotXcmConfig {
+			safe_xcm_version: Some(SAFE_XCM_VERSION),
+			..Default::default()
+		},
 		assets: Default::default(),
 		democracy: DemocracyConfig::default(),
 		council: CouncilConfig { members: vec![], phantom: Default::default() },

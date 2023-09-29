@@ -1,5 +1,5 @@
-use sp_std::vec::Vec;
 use frame_system::pallet_prelude::BlockNumberFor;
+use sp_std::vec::Vec;
 
 pub trait ServerInfo<T: frame_system::Config> {
 	fn get_id(&self) -> u64;

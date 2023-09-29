@@ -8,8 +8,8 @@ use frame_support::{
 	weights::Weight,
 	PalletId,
 };
-use sp_std::vec::Vec;
 use frame_system::pallet_prelude::BlockNumberFor;
+use sp_std::vec::Vec;
 
 const PALLET_ID: PalletId = PalletId(*b"Server!!");
 
@@ -20,7 +20,7 @@ impl<T: Config> Pallet<T> {
 
 	pub fn do_api_url_exist(api_url: &[u8]) -> Result<(), Error<T>> {
 		if Self::server_by_api_url(api_url).is_some() {
-			return Err(Error::<T>::AlreadyExists)
+			return Err(Error::<T>::AlreadyExists);
 		}
 
 		Ok(())
@@ -39,7 +39,7 @@ impl<T: Config> Pallet<T> {
 				DispatchError::Module(_) => Err(Error::<T>::InsufficientBalance),
 				DispatchError::Arithmetic(_) => Err(Error::<T>::InsufficientBalance),
 				_ => Err(Error::<T>::BadSignature),
-			}
+			};
 		}
 
 		Ok(())

@@ -23,7 +23,7 @@ impl<T: Config> ServerInterface<T> for Pallet<T> {
 		let stake_amount = if let Some(amount) = stake_amount { amount } else { minimum_amount };
 
 		if stake_amount < minimum_amount {
-			return Err(Error::<T>::MinimumStakeLimitBalance)
+			return Err(Error::<T>::MinimumStakeLimitBalance);
 		}
 
 		let server = Server::new(index, owner, api_url, stake_amount);
@@ -52,11 +52,11 @@ impl<T: Config> ServerInterface<T> for Pallet<T> {
 		ServerById::<T>::try_mutate(server_id, |result| match result {
 			Some(server) => {
 				if server.get_owner() != owner {
-					return Err(Error::<T>::Unauthorized)
+					return Err(Error::<T>::Unauthorized);
 				}
 
 				if server.get_unstaked_at().is_some() {
-					return Err(Error::<T>::WaitingToUnstaked)
+					return Err(Error::<T>::WaitingToUnstaked);
 				}
 
 				let updated_server = match action {
@@ -91,11 +91,11 @@ impl<T: Config> ServerInterface<T> for Pallet<T> {
 						let current_stake_amount = server.get_stake_amount();
 
 						if amount.gt(current_stake_amount) {
-							return Err(Error::<T>::InsufficientBalance)
+							return Err(Error::<T>::InsufficientBalance);
 						}
 
 						if *current_stake_amount - *amount < T::MinimumStakeAmount::get() {
-							return Err(Error::<T>::UnstakingLimitBalance)
+							return Err(Error::<T>::UnstakingLimitBalance);
 						}
 
 						Self::do_transfer(
@@ -133,7 +133,7 @@ impl<T: Config> ServerInterface<T> for Pallet<T> {
 
 		Tasks::<T>::mutate(scheduled_block_number, |tasks: &mut Vec<ServerId>| {
 			if tasks.len() as u32 >= T::MaxScheduledPerBlock::get() {
-				return Err(Error::<T>::FailedToSchedule)
+				return Err(Error::<T>::FailedToSchedule);
 			}
 
 			tasks.push(server_id);
@@ -161,7 +161,7 @@ impl<T: Config> ServerInterface<T> for Pallet<T> {
 		let unstaked_at = server.get_unstaked_at();
 
 		if unstaked_at.is_none() {
-			return Err(Error::<T>::NotExists)
+			return Err(Error::<T>::NotExists);
 		}
 
 		let unstaked_at = unstaked_at.unwrap();
