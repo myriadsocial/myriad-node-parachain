@@ -1,11 +1,9 @@
 use crate as pallet_server;
 
+use sp_runtime::BuildStorage;
 use sp_core::{sr25519, Pair, H256};
 use sp_io::TestExternalities;
-use sp_runtime::{
-	testing::Header,
-	traits::{BlakeTwo256, IdentityLookup},
-};
+use sp_runtime::traits::{BlakeTwo256, IdentityLookup};
 
 use frame_support::{
 	construct_runtime, parameter_types,
@@ -16,24 +14,20 @@ use frame_system as system;
 
 use pallet_balances::AccountData;
 
-type UncheckedExtrinsic = system::mocking::MockUncheckedExtrinsic<Test>;
 type Block = system::mocking::MockBlock<Test>;
 type Balance = u64;
 
 construct_runtime!(
-	pub enum Test where
-		Block = Block,
-		NodeBlock = Block,
-		UncheckedExtrinsic = UncheckedExtrinsic,
+	pub enum Test
 	{
-		System: system,
-		Server: pallet_server,
-		Balances: pallet_balances,
+		System: system = 0,
+		Server: pallet_server = 50,
+		Balances: pallet_balances = 51,
 	}
 );
 
 parameter_types! {
-	pub BlockWeights: system::limits::BlockWeights = system::limits::BlockWeights::simple_max(Weight::from_parts(1024));
+	pub BlockWeights: system::limits::BlockWeights = system::limits::BlockWeights::simple_max(Weight::from_parts(1024, 1024));
 }
 
 impl system::Config for Test {
@@ -42,13 +36,12 @@ impl system::Config for Test {
 	type BaseCallFilter = Everything;
 	type BlockHashCount = ConstU64<250>;
 	type BlockLength = ();
-	type BlockNumber = u64;
+	type Block = Block;
 	type BlockWeights = ();
 	type DbWeight = ();
+	type Nonce = u32;
 	type Hash = H256;
 	type Hashing = BlakeTwo256;
-	type Header = Header;
-	type Index = u64;
 	type Lookup = IdentityLookup<Self::AccountId>;
 	type MaxConsumers = ConstU32<2>;
 	type OnKilledAccount = ();
@@ -77,6 +70,10 @@ impl pallet_balances::Config for Test {
 	type ReserveIdentifier = [u8; 8];
 	type RuntimeEvent = RuntimeEvent;
 	type WeightInfo = ();
+	type RuntimeHoldReason = RuntimeHoldReason;
+	type FreezeIdentifier = ();
+	type MaxHolds = ConstU32<0>;
+	type MaxFreezes = ConstU32<0>;
 }
 
 parameter_types! {
@@ -106,7 +103,7 @@ pub struct ExternalityBuilder {
 
 impl ExternalityBuilder {
 	pub fn build(&self) -> TestExternalities {
-		let mut t = system::GenesisConfig::default().build_storage::<Test>().unwrap();
+		let mut t = system::GenesisConfig::<Test>::default().build_storage().unwrap();
 
 		let alice_public = account_key("alice");
 		let bob_public = account_key("bob");
