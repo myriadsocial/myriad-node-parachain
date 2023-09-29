@@ -8,7 +8,7 @@
   "properties": {
     "ss58Format": 42,
     "tokenDecimals": 18,
-    "tokenSymbol": "MYRIA"
+    "tokenSymbol": "MYRIAr"
   },
   "relay_chain": "rococo",
   "para_id": 4242,
