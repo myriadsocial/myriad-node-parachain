@@ -1,12 +1,12 @@
 use crate as pallet_tipping;
 
-use sp_runtime::BuildStorage;
 use sp_core::{
 	sr25519::{self as sr25519, Signature},
 	Pair, H256,
 };
 use sp_io::TestExternalities;
 use sp_runtime::traits::{BlakeTwo256, IdentifyAccount, IdentityLookup, Verify};
+use sp_runtime::BuildStorage;
 
 use frame_support::{
 	construct_runtime, parameter_types,
@@ -24,13 +24,10 @@ type Balance = u128;
 type AssetId = u32;
 
 construct_runtime!(
-	pub enum Test where
-		Block = Block,
-		NodeBlock = Block,
-		UncheckedExtrinsic = UncheckedExtrinsic,
+	pub enum Test
 	{
 		System: frame_system,
-		Timestamp: pallet_timestamp,
+		Timestamp: pallet_timestamp = 2,
 		Balances: pallet_balances = 10,
 		Assets: pallet_assets,
 		Tipping: pallet_tipping,
@@ -79,7 +76,7 @@ impl pallet_timestamp::Config for Test {
 }
 
 parameter_types! {
-	pub static ExistentialDeposit: Balance = 0;
+	pub static ExistentialDeposit: Balance = 1;
 }
 
 impl pallet_balances::Config for Test {

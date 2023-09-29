@@ -1,29 +1,29 @@
 use crate::{self as pallet_server, mock::*, ActionType, Error, Status};
 use frame_support::{assert_noop, assert_ok, traits::OnInitialize};
 
-// #[test]
-// fn register_works() {
-// 	<ExternalityBuilder>::default().existential_deposit(1).build().execute_with(|| {
-// 		let owner = account_key("alice");
-// 		let owner_origin = RuntimeOrigin::signed(owner);
+#[test]
+fn register_works() {
+	<ExternalityBuilder>::default().existential_deposit(1).build().execute_with(|| {
+		let owner = account_key("alice");
+		let owner_origin = RuntimeOrigin::signed(owner);
 
-// 		let server_id = 0u64;
-// 		let api_url = "https://api.dev.myriad.social".as_bytes().to_vec();
+		let server_id = 0u64;
+		let api_url = "https://api.dev.myriad.social".as_bytes().to_vec();
 
-// 		let server = pallet_server::Server::new(server_id, &owner, &api_url, 5);
-// 		let server_account_id = Server::server_account_id(server_id);
+		let server = pallet_server::Server::new(server_id, &owner, &api_url, 5);
+		let server_account_id = Server::server_account_id(server_id);
 
-// 		assert_ok!(Server::register(owner_origin, api_url.clone(), Some(5)));
+		assert_ok!(Server::register(owner_origin, api_url.clone(), Some(5)));
 
-// 		assert_eq!(Server::server_by_id(server_id), Some(server.clone()));
-// 		assert_eq!(Server::server_by_owner(owner, server_id), Some(server));
-// 		assert_eq!(Server::server_by_api_url(api_url), Some(server_id));
-// 		assert_eq!(Server::server_count(), 1);
-// 		assert_eq!(Server::server_index(), 1);
-// 		assert_eq!(Balances::free_balance(owner), 5);
-// 		assert_eq!(Balances::free_balance(server_account_id), 5);
-// 	})
-// }
+		assert_eq!(Server::server_by_id(server_id), Some(server.clone()));
+		assert_eq!(Server::server_by_owner(owner, server_id), Some(server));
+		assert_eq!(Server::server_by_api_url(api_url), Some(server_id));
+		assert_eq!(Server::server_count(), 1);
+		assert_eq!(Server::server_index(), 1);
+		assert_eq!(Balances::free_balance(owner), 5);
+		assert_eq!(Balances::free_balance(server_account_id), 5);
+	})
+}
 
 #[test]
 pub fn transfer_owner_works() {
@@ -129,60 +129,60 @@ pub fn cancel_deregister_works() {
 	})
 }
 
-// #[test]
-// pub fn increase_stake_amount_works() {
-// 	<ExternalityBuilder>::default().existential_deposit(1).build().execute_with(|| {
-// 		let owner = account_key("alice");
-// 		let api_url = "https://api.dev.myriad.social".as_bytes().to_vec();
-// 		let server_id = 0u64;
-// 		let amount = 3;
+#[test]
+pub fn increase_stake_amount_works() {
+	<ExternalityBuilder>::default().existential_deposit(1).build().execute_with(|| {
+		let owner = account_key("alice");
+		let api_url = "https://api.dev.myriad.social".as_bytes().to_vec();
+		let server_id = 0u64;
+		let amount = 3;
 
-// 		let server = pallet_server::Server::new(server_id, &owner, &api_url, 6);
-// 		let server_account_id = Server::server_account_id(server_id);
+		let server = pallet_server::Server::new(server_id, &owner, &api_url, 6);
+		let server_account_id = Server::server_account_id(server_id);
 
-// 		assert_ok!(Server::register(RuntimeOrigin::signed(owner), api_url, None));
-// 		assert_ok!(Server::update_server(
-// 			RuntimeOrigin::signed(owner),
-// 			server_id,
-// 			ActionType::StakeAmount(amount)
-// 		));
+		assert_ok!(Server::register(RuntimeOrigin::signed(owner), api_url, None));
+		assert_ok!(Server::update_server(
+			RuntimeOrigin::signed(owner),
+			server_id,
+			ActionType::StakeAmount(amount)
+		));
 
-// 		assert_eq!(Server::server_by_id(server_id), Some(server.clone()));
-// 		assert_eq!(Server::server_by_owner(owner, server_id), Some(server));
-// 		assert_eq!(Balances::free_balance(owner), 4);
-// 		assert_eq!(Balances::free_balance(server_account_id), 6);
-// 	})
-// }
+		assert_eq!(Server::server_by_id(server_id), Some(server.clone()));
+		assert_eq!(Server::server_by_owner(owner, server_id), Some(server));
+		assert_eq!(Balances::free_balance(owner), 4);
+		assert_eq!(Balances::free_balance(server_account_id), 6);
+	})
+}
 
-// #[test]
-// pub fn decrease_stake_amount_works() {
-// 	<ExternalityBuilder>::default().existential_deposit(1).build().execute_with(|| {
-// 		let owner = account_key("alice");
-// 		let api_url = "https://api.dev.myriad.social".as_bytes().to_vec();
-// 		let server_id = 0u64;
-// 		let amount = 3;
+#[test]
+pub fn decrease_stake_amount_works() {
+	<ExternalityBuilder>::default().existential_deposit(1).build().execute_with(|| {
+		let owner = account_key("alice");
+		let api_url = "https://api.dev.myriad.social".as_bytes().to_vec();
+		let server_id = 0u64;
+		let amount = 3;
 
-// 		let server = pallet_server::Server::new(server_id, &owner, &api_url, 3);
-// 		let server_account_id = Server::server_account_id(server_id);
+		let server = pallet_server::Server::new(server_id, &owner, &api_url, 3);
+		let server_account_id = Server::server_account_id(server_id);
 
-// 		assert_ok!(Server::register(RuntimeOrigin::signed(owner), api_url, None));
-// 		assert_ok!(Server::update_server(
-// 			RuntimeOrigin::signed(owner),
-// 			server_id,
-// 			ActionType::StakeAmount(amount)
-// 		));
-// 		assert_ok!(Server::update_server(
-// 			RuntimeOrigin::signed(owner),
-// 			server_id,
-// 			ActionType::UnstakeAmount(amount)
-// 		));
+		assert_ok!(Server::register(RuntimeOrigin::signed(owner), api_url, None));
+		assert_ok!(Server::update_server(
+			RuntimeOrigin::signed(owner),
+			server_id,
+			ActionType::StakeAmount(amount)
+		));
+		assert_ok!(Server::update_server(
+			RuntimeOrigin::signed(owner),
+			server_id,
+			ActionType::UnstakeAmount(amount)
+		));
 
-// 		assert_eq!(Server::server_by_id(server_id), Some(server.clone()));
-// 		assert_eq!(Server::server_by_owner(owner, server_id), Some(server));
-// 		assert_eq!(Balances::free_balance(owner), 7);
-// 		assert_eq!(Balances::free_balance(server_account_id), 3);
-// 	})
-// }
+		assert_eq!(Server::server_by_id(server_id), Some(server.clone()));
+		assert_eq!(Server::server_by_owner(owner, server_id), Some(server));
+		assert_eq!(Balances::free_balance(owner), 7);
+		assert_eq!(Balances::free_balance(server_account_id), 3);
+	})
+}
 
 // #[test]
 // pub fn unstake_server_works() {

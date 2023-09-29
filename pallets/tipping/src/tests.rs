@@ -1,39 +1,39 @@
 use crate::{mock::*, Error, Receipt, References, TipsBalance, TipsBalanceInfo};
 use frame_support::{assert_noop, assert_ok, dispatch::DispatchError};
 
-// #[test]
-// fn pay_content_with_myria_works() {
-// 	<ExternalityBuilder>::default().existential_deposit(1).build().execute_with(|| {
-// 		let server_id = account_key("alice");
-// 		let sender = account_key("sender_1");
-// 		let receiver = account_key("john");
-// 		let tipping_account_id = Tipping::tipping_account_id();
-// 		let amount = 10_000;
+#[test]
+fn pay_content_with_myria_works() {
+	<ExternalityBuilder>::default().existential_deposit(1).build().execute_with(|| {
+		let server_id = account_key("alice");
+		let sender = account_key("sender_1");
+		let receiver = account_key("john");
+		let tipping_account_id = Tipping::tipping_account_id();
+		let amount = 10_000;
 
-// 		let tips_balance_info = TipsBalanceInfo::new(
-// 			&server_id,
-// 			b"unlockable_content",
-// 			b"unlockable_content_id",
-// 			b"native",
-// 		);
+		let tips_balance_info = TipsBalanceInfo::new(
+			&server_id,
+			b"unlockable_content",
+			b"unlockable_content_id",
+			b"native",
+		);
 
-// 		assert_ok!(Tipping::pay_content(
-// 			RuntimeOrigin::signed(sender),
-// 			Some(receiver),
-// 			0,
-// 			tips_balance_info,
-// 			amount,
-// 			None,
-// 		));
+		assert_ok!(Tipping::pay_content(
+			RuntimeOrigin::signed(sender),
+			Some(receiver),
+			0,
+			tips_balance_info,
+			amount,
+			None,
+		));
 
-// 		assert_eq!(Balances::free_balance(sender), 10_000); // ori 9 500
-// 		assert_eq!(Balances::free_balance(receiver), 9_530); // ori 10 030
-// 		assert_eq!(Balances::free_balance(tipping_account_id), 500);
+		assert_eq!(Balances::free_balance(sender), 10_000); // ori 9 500
+		assert_eq!(Balances::free_balance(receiver), 9_530); // ori 10 030
+		assert_eq!(Balances::free_balance(tipping_account_id), 500);
 
-// 		assert_eq!(Tipping::withdrawal_balance(b"native".to_vec()), 25);
-// 		assert_eq!(Tipping::reward_balance((server_id, 0, b"native".to_vec())), 475);
-// 	})
-// }
+		assert_eq!(Tipping::withdrawal_balance(b"native".to_vec()), 25);
+		assert_eq!(Tipping::reward_balance((server_id, 0, b"native".to_vec())), 475);
+	})
+}
 
 #[test]
 fn pay_content_with_assets_works() {
@@ -65,52 +65,52 @@ fn pay_content_with_assets_works() {
 	})
 }
 
-// #[test]
-// fn pay_content_to_escrow_works() {
-// 	<ExternalityBuilder>::default().existential_deposit(1).build().execute_with(|| {
-// 		let server_id = account_key("alice");
-// 		let sender = account_key("sender_1");
-// 		let tipping_account_id = Tipping::tipping_account_id();
-// 		let amount = 10_000;
+#[test]
+fn pay_content_to_escrow_works() {
+	<ExternalityBuilder>::default().existential_deposit(1).build().execute_with(|| {
+		let server_id = account_key("alice");
+		let sender = account_key("sender_1");
+		let tipping_account_id = Tipping::tipping_account_id();
+		let amount = 10_000;
 
-// 		let tips_balance_info = TipsBalanceInfo::new(
-// 			&server_id,
-// 			b"unlockable_content",
-// 			b"unlockable_content_id",
-// 			b"native",
-// 		);
+		let tips_balance_info = TipsBalanceInfo::new(
+			&server_id,
+			b"unlockable_content",
+			b"unlockable_content_id",
+			b"native",
+		);
 
-// 		assert_ok!(Tipping::pay_content(
-// 			RuntimeOrigin::signed(sender),
-// 			None,
-// 			0,
-// 			tips_balance_info,
-// 			amount,
-// 			Some(b"user_id".to_vec()),
-// 		));
+		assert_ok!(Tipping::pay_content(
+			RuntimeOrigin::signed(sender),
+			None,
+			0,
+			tips_balance_info,
+			amount,
+			Some(b"user_id".to_vec()),
+		));
 
-// 		assert_eq!(Balances::free_balance(sender), 10_000); // ori 9_500
-// 		assert_eq!(Balances::free_balance(tipping_account_id), 10_000); // ori 10_500
+		assert_eq!(Balances::free_balance(sender), 10_000); // ori 9_500
+		assert_eq!(Balances::free_balance(tipping_account_id), 10_000); // ori 10_500
 
-// 		assert_eq!(Tipping::withdrawal_balance(b"native".to_vec()), 25);
-// 		assert_eq!(Tipping::reward_balance((server_id, 0, b"native".to_vec())), 475);
+		assert_eq!(Tipping::withdrawal_balance(b"native".to_vec()), 25);
+		assert_eq!(Tipping::reward_balance((server_id, 0, b"native".to_vec())), 475);
 
-// 		let account_info = TipsBalanceInfo::new(&server_id, b"user", b"user_id", b"native");
-// 		let net = 9_500; // added &net
+		let account_info = TipsBalanceInfo::new(&server_id, b"user", b"user_id", b"native");
+		let net = 9_500; // added &net
 
-// 		let tips_balance = TipsBalance::new(&account_info, &net); // &amount changed to &net
+		let tips_balance = TipsBalance::new(&account_info, &net); // &amount changed to &net
 
-// 		assert_eq!(
-// 			Tipping::tips_balance_by_reference((
-// 				&server_id,
-// 				b"user".to_vec(),
-// 				b"user_id".to_vec(),
-// 				b"native".to_vec()
-// 			)),
-// 			Some(tips_balance)
-// 		);
-// 	})
-// }
+		assert_eq!(
+			Tipping::tips_balance_by_reference((
+				&server_id,
+				b"user".to_vec(),
+				b"user_id".to_vec(),
+				b"native".to_vec()
+			)),
+			Some(tips_balance)
+		);
+	})
+}
 
 #[test]
 fn withdrawal_fee_works() {
@@ -478,7 +478,7 @@ fn claim_tip_works() {
 			vec![b"native".to_vec(), b"1".to_vec(), b"2".to_vec()]
 		));
 
-		assert_eq!(Balances::free_balance(account_key("john")), 31);
+		assert_eq!(Balances::free_balance(account_key("john")), 30);
 		assert_eq!(Balances::free_balance(account_key("alice")), 11);
 		assert_eq!(Assets::balance(1, account_key("john")), 31);
 		assert_eq!(Assets::balance(2, account_key("john")), 32);
