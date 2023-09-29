@@ -28,6 +28,7 @@ Starting with Myriad.Social, we are creating a platform where social app, metave
 7. [Define Chain Specification Configuration](#2-define-chain-specification-configuration)
 8. [Replace Parachain Template Runtime](#3-replace-parachain-template-runtime)
 9. [Move Octopus Application Pallets](#4-move-octopus-application-pallets)
+10. [Move Octopus Application Pallets](#4-move-octopus-application-pallets)
 
 ---
 
@@ -145,8 +146,52 @@ It's important to configure the Chain Specification for the following contexts:
 
 ---
 
-These steps provide a comprehensive guide for transforming Substrate project configurations. Ensure that you follow each step carefully to successfully configure your Substrate-based parachain with the Octopus application runtime.
+## Guide to Testing the Project Using Docker
+
+Substrate is a modular framework that enables you to create purpose-built blockchains by composing custom or pre-built components. This guide will walk you through the steps to use Docker for testing a Rust-based Substrate project.
+
+### Prerequisites
+
+1. **Docker Installed**: Ensure Docker is installed on your machine. If not, follow the [official installation guide](https://docs.docker.com/get-docker/).
+
+2. **Docker Daemon Running**: Ensure the Docker daemon is running.
+
+3. **Substrate Project**: A directory containing your Substrate project.
+
+### Step-by-Step Instructions
+
+#### 1. Create a Dockerfile
+
+Create a `Dockerfile` in the root directory of your Substrate project with the following content:
+
+```Dockerfile
+# Use an official Rust base image
+FROM rust:1.70.0
+
+# Set the working directory inside the container
+WORKDIR /usr/src/substrate_project
+
+# Copy the entire project into the container
+COPY . .
+
+# Build the application
+RUN cargo build
+
+# Run tests on container startup
+CMD ["cargo", "test"]
+```
+
+#### 2. Build the Docker Image
+
+Navigate to your project's directory and build the Docker image:
+
+```bash
+cd /path/to/your/myriad-node-parachain
+docker build -t substrate-test .
+```
+
+---
+
+These steps provide a comprehensive guide for migrating Substrate project from an Octopus Appchain to a Rococo Parachain. Ensure that you follow each step carefully to successfully configure your Substrate-based parachain with the Octopus application runtime.
 
 Feel free to reach out if you have any questions or need further assistance during this process.
-
-
