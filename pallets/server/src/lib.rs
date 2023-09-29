@@ -48,7 +48,7 @@ pub mod pallet {
 		type MinimumStakeAmount: Get<<Self::Currency as Currency<Self::AccountId>>::Balance>;
 
 		#[pallet::constant]
-		type ScheduledBlockTime: Get<Self::BlockNumber>;
+		type ScheduledBlockTime: Get<BlockNumberFor<Self>>;
 
 		#[pallet::constant]
 		type MaxScheduledPerBlock: Get<u32>;

@@ -3,7 +3,7 @@ use crate::*;
 use frame_support::{
 	dispatch::DispatchError,
 	sp_runtime::traits::{AccountIdConversion, SaturatedConversion, Saturating, Zero},
-	traits::{fungibles, Currency, ExistenceRequirement, Get},
+	traits::{fungibles, tokens::Preservation::Preserve, Currency, ExistenceRequirement, Get},
 	PalletId,
 };
 use sp_std::vec::*;
@@ -189,12 +189,12 @@ impl<T: Config> Pallet<T> {
 			CurrencyOf::<T>::transfer(sender, receiver, amount, ExistenceRequirement::KeepAlive)?;
 		} else {
 			let asset_id = Self::asset_id(ft_identifier)?;
-			let _ = <T::Assets as fungibles::Transfer<T::AccountId>>::transfer(
+			let _ = <T::Assets as fungibles::Mutate<T::AccountId>>::transfer(
 				asset_id,
 				sender,
 				receiver,
 				amount.saturated_into(),
-				true,
+				Preserve,
 			)?;
 		}
 

@@ -83,7 +83,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 			.saturating_add(T::DbWeight::get().reads((1_u64).saturating_mul(s.into())))
 			.saturating_add(T::DbWeight::get().writes(3_u64))
 			.saturating_add(T::DbWeight::get().writes((1_u64).saturating_mul(s.into())))
-			.saturating_add(Weight::from_proof_size(3716).saturating_mul(s.into()))
+			.saturating_add(Weight::from_parts(0, 3716).saturating_mul(s.into()))
 	}
 	/// Storage: Server ServerById (r:1 w:1)
 	/// Proof Skipped: Server ServerById (max_values: None, max_size: None, mode: Measured)
@@ -120,7 +120,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 		//  Measured:  `0`
 		//  Estimated: `0`
 		// Minimum execution time: 0 nanoseconds.
-		Weight::from_ref_time(1_000_000)
+		Weight::from_parts(1_000_000, 0)
 	}
 }
 
@@ -167,7 +167,7 @@ impl WeightInfo for () {
 			.saturating_add(RocksDbWeight::get().reads((1_u64).saturating_mul(s.into())))
 			.saturating_add(RocksDbWeight::get().writes(3_u64))
 			.saturating_add(RocksDbWeight::get().writes((1_u64).saturating_mul(s.into())))
-			.saturating_add(Weight::from_proof_size(3716).saturating_mul(s.into()))
+			.saturating_add(Weight::from_parts(0, 3716).saturating_mul(s.into()))
 	}
 	/// Storage: Server ServerById (r:1 w:1)
 	/// Proof Skipped: Server ServerById (max_values: None, max_size: None, mode: Measured)
@@ -204,6 +204,6 @@ impl WeightInfo for () {
 		//  Measured:  `0`
 		//  Estimated: `0`
 		// Minimum execution time: 0 nanoseconds.
-		Weight::from_ref_time(1_000_000)
+		Weight::from_parts(1_000_000, 0)
 	}
 }

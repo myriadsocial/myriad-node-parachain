@@ -44,7 +44,7 @@ pub mod pallet {
 		type TimeProvider: UnixTime;
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 		type Currency: Currency<<Self as frame_system::Config>::AccountId>;
-		type Assets: fungibles::Transfer<
+		type Assets: fungibles::Mutate<
 			<Self as frame_system::Config>::AccountId,
 			AssetId = AssetId,
 			Balance = AssetBalance,

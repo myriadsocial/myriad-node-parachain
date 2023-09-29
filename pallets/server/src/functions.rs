@@ -9,6 +9,7 @@ use frame_support::{
 	PalletId,
 };
 use sp_std::vec::Vec;
+use frame_system::pallet_prelude::BlockNumberFor;
 
 const PALLET_ID: PalletId = PalletId(*b"Server!!");
 
@@ -44,7 +45,7 @@ impl<T: Config> Pallet<T> {
 		Ok(())
 	}
 
-	pub fn do_remove_servers(when: T::BlockNumber, tasks: Vec<ServerId>) -> Weight {
+	pub fn do_remove_servers(when: BlockNumberFor<T>, tasks: Vec<ServerId>) -> Weight {
 		let mut total_weight = Weight::zero();
 
 		for server_id in tasks.iter() {
