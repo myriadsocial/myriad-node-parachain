@@ -1,17 +1,17 @@
 {
-  "name": "Myriad Local",
-  "id": "myriad_local",
-  "chainType": "Local",
+  "name": "Myriad Rococo",
+  "id": "myriad_rococo",
+  "chainType": "Live",
   "bootNodes": [],
   "telemetryEndpoints": null,
-  "protocolId": "myriad-local",
+  "protocolId": "myriad-rococo",
   "properties": {
     "ss58Format": 42,
     "tokenDecimals": 18,
     "tokenSymbol": "MYRIA"
   },
-  "relay_chain": "rococo-local",
-  "para_id": 2000,
+  "relay_chain": "rococo",
+  "para_id": 4242,
   "codeSubstitutes": {},
   "genesis": {
     "runtime": {
@@ -20,17 +20,13 @@
       },
       "parachainSystem": {},
       "parachainInfo": {
-        "parachainId": 2000
+        "parachainId": 4242
       },
       "balances": {
         "balances": [
           [
-            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-            124999990000000000000000000
-          ],
-          [
-            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-            10000000000000000000
+            "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs",
+            125000000000000000000000000
           ]
         ]
       },
@@ -44,8 +40,7 @@
       },
       "collatorSelection": {
         "invulnerables": [
-          "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-          "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+          "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs"
         ],
         "candidacyBond": 1800000000000000000,
         "desiredCandidates": 0
@@ -53,17 +48,10 @@
       "session": {
         "keys": [
           [
-            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+            "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs",
+            "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs",
             {
-              "aura": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
-            }
-          ],
-          [
-            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-            {
-              "aura": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+              "aura": "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs"
             }
           ]
         ]
@@ -83,7 +71,7 @@
       },
       "democracy": {},
       "sudo": {
-        "key": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+        "key": "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs"
       }
     }
   }
