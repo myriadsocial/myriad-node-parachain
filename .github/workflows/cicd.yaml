@@ -1,18 +1,12 @@
 name: CI/CD
 
 on:
-  #pull_request:
-    #branches:
-      #- main
-  #push:
-    #branches:
-      #- main
-  workflow_dispatch:
-    inputs:
-      refToBuild:
-        description: 'Commit SHA1 to build'
-        required: true
-        type: string
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -56,15 +50,14 @@ jobs:
         run: cargo ${{ matrix.command }}
 
   build:
-    #if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
+    if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
     runs-on: ubuntu-20.04
     name: Build
     steps:
       - name: Checkout Repository
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
         with:
-          ref: ${{ inputs.refToBuild }}
-          #fetch-depth: 0
+          fetch-depth: 0
       - name: Install protobuf-compiler
         run: sudo apt install -y protobuf-compiler
       - name: Install toolchain
@@ -82,6 +75,8 @@ jobs:
         run: cargo build --release --locked
       - name: Copy binnary file
         run: cp target/release/myriad .
+      - name: Copy chainspec file
+        run: cp node/res/raw-parachain-chainspec.json .
       - name: Send WASM to Discord
         uses: tsickert/discord-webhook@c840d45a03a323fbc3f7507ac7769dbd91bfb164
         with:

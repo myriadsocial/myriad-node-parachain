@@ -17,6 +17,8 @@ RUN apt-get update && \
   ln -s /data /home/myriad/.local/share/myriad
 # Add binnary to docker image
 COPY ./myriad /usr/local/bin
+# Add chainspec
+COPY ./raw-parachain-chainspec.json /home/myriad/raw-parachain-chainspec.json
 # Set to a non-root built-in user
 USER myriad
 # Set environment variable
