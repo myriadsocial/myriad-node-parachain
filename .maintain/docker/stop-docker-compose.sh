@@ -9,6 +9,6 @@ PROJECT_ROOT=`git rev-parse --show-toplevel`
 cd $PROJECT_ROOT
 
 echo "Stopping docker compose"
-docker-compose -p myriad-node -f .maintain/docker/docker-compose.yml down -v
+docker-compose -p myriad-node-parachain -f .maintain/docker/docker-compose.yml down -v
 
 popd

@@ -2,24 +2,22 @@ version: '3'
 
 services:
   node:
-    container_name: myriad-node
-    image: myriadsocial/myriad-node
+    container_name: myriad-node-parachain
+    image: myriadsocial/myriad-node-parachain
     build:
       context: ../../
       dockerfile: .maintain/docker/Dockerfile
     volumes:
       - data:/data
     command: >
-      --base-path /data
+      --base-path .local \
+      --dev \
+      --alice \
+      --collator \
+      --force-authoring \
+      -- \
+      --execution wasm \
       --dev
-      --alice
-      --collator
-      --rpc-cors all
-      --rpc-methods unsafe
-      --unsafe-rpc-external
-      --unsafe-ws-external
-      --prometheus-external
-      --no-telemetry
     ports:
       - 30333:30333
       - 9933:9933
