@@ -1,4 +1,4 @@
-FROM paritytech/ci-linux:42a94a57-20220730@sha256:9666da1a0ad5f4d127e3cbd7fcf2aae0165a33ecff4fb0efd9baf03f24093483 AS chef
+FROM paritytech/ci-linux:61d4fd50-20230713 AS chef
 RUN cargo install cargo-chef --version 0.1.31
 WORKDIR /app
 
