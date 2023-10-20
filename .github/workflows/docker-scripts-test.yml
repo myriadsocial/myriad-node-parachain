@@ -1,0 +1,48 @@
+name: Docker Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  dockerfile-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image from root
+      run: docker build -t test-image .
+
+  run-scripts:
+    needs: dockerfile-test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Build Docker image with script
+      run: ./.maintain/docker/build-image.sh
+
+    - name: Create Docker network
+      run: ./.maintain/docker/create-network.sh
+
+    - name: Start Docker Compose
+      run: ./.maintain/docker/start-docker-compose.sh
