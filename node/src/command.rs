@@ -282,7 +282,7 @@ pub fn run() -> Result<()> {
 				info!("Parachain Account: {parachain_account}");
 				info!("Is collating: {}", if config.role.is_authority() { "yes" } else { "no" });
 
-				if !collator_options.relay_chain_rpc_urls.is_empty()
+				if !cli.run.relay_chain_rpc_urls.is_empty()
 					&& !cli.relay_chain_args.is_empty()
 				{
 					warn!(
