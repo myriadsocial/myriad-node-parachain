@@ -33,8 +33,8 @@ use frame_support::{
 	dispatch::DispatchClass,
 	parameter_types,
 	traits::{
-		AsEnsureOriginWithArg, ConstU16, ConstU32, ConstU64, ConstU8, EitherOfDiverse, Everything,
-		PrivilegeCmp,
+		fungible::HoldConsideration, AsEnsureOriginWithArg, ConstU16, ConstU32, ConstU64, ConstU8,
+		EitherOfDiverse, Everything, LinearStoragePrice, PrivilegeCmp,
 	},
 	weights::{
 		constants::WEIGHT_REF_TIME_PER_SECOND, ConstantMultiplier, Weight, WeightToFeeCoefficient,
@@ -458,15 +458,20 @@ impl pallet_assets::Config for Runtime {
 parameter_types! {
 	pub const PreimageBaseDeposit: Balance = currency::deposit(2, 64);
 	pub const PreimageByteDeposit: Balance = currency::deposit(0, 1);
+	pub const PreimageHoldReason: RuntimeHoldReason = RuntimeHoldReason::Preimage(pallet_preimage::HoldReason::Preimage);
 }
 
 impl pallet_preimage::Config for Runtime {
-	type BaseDeposit = PreimageBaseDeposit;
-	type ByteDeposit = PreimageByteDeposit;
 	type Currency = Balances;
 	type ManagerOrigin = EnsureRoot<AccountId>;
 	type RuntimeEvent = RuntimeEvent;
 	type WeightInfo = pallet_preimage::weights::SubstrateWeight<Runtime>;
+	type Consideration = HoldConsideration<
+		AccountId,
+		Balances,
+		PreimageHoldReason,
+		LinearStoragePrice<PreimageBaseDeposit, PreimageByteDeposit, Balance>,
+	>;
 }
 
 parameter_types! {
