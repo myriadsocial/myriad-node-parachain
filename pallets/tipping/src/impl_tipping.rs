@@ -1,6 +1,6 @@
 use super::*;
 
-use frame_support::{dispatch::DispatchError, sp_runtime::traits::Zero};
+use frame_support::sp_runtime::{traits::Zero, DispatchError};
 use sp_std::vec::Vec;
 
 impl<T: Config> TippingInterface<T> for Pallet<T> {

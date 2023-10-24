@@ -1,8 +1,10 @@
 use crate::*;
 
 use frame_support::{
-	dispatch::DispatchError,
-	sp_runtime::traits::{AccountIdConversion, SaturatedConversion, Saturating, Zero},
+	sp_runtime::{
+		traits::{AccountIdConversion, SaturatedConversion, Saturating, Zero},
+		DispatchError,
+	},
 	traits::{fungibles, tokens::Preservation::Preserve, Currency, ExistenceRequirement, Get},
 	PalletId,
 };
