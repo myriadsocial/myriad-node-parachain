@@ -25,11 +25,11 @@
       "balances": {
         "balances": [
           [
-            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+            "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs",
             124999990000000000000000000
           ],
           [
-            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+            "5Eq3TrJxSwgyYyM666zE21oiehMJiUnzhwy47YQoUH4rGTLH",
             10000000000000000000
           ]
         ]
@@ -44,8 +44,8 @@
       },
       "collatorSelection": {
         "invulnerables": [
-          "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-          "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+          "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs",
+          "5Eq3TrJxSwgyYyM666zE21oiehMJiUnzhwy47YQoUH4rGTLH"
         ],
         "candidacyBond": 1800000000000000000,
         "desiredCandidates": 0
@@ -53,17 +53,17 @@
       "session": {
         "keys": [
           [
-            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+            "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs",
+            "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs",
             {
-              "aura": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+              "aura": "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs"
             }
           ],
           [
-            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+            "5Eq3TrJxSwgyYyM666zE21oiehMJiUnzhwy47YQoUH4rGTLH",
+            "5Eq3TrJxSwgyYyM666zE21oiehMJiUnzhwy47YQoUH4rGTLH",
             {
-              "aura": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+              "aura": "5Eq3TrJxSwgyYyM666zE21oiehMJiUnzhwy47YQoUH4rGTLH"
             }
           ]
         ]
@@ -83,7 +83,7 @@
       },
       "democracy": {},
       "sudo": {
-        "key": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+        "key": "5HdaTtFK9kYGHLgrBMAKMiHQXF92JX16XBohKSXyvDeWxZTs"
       }
     }
   }
