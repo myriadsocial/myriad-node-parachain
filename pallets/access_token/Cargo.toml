@@ -1,0 +1,50 @@
+[package]
+authors = ['Myriad Dev Team <dev@myriad.social>']
+edition = '2021'
+homepage = 'https://myriad.social'
+license = 'AGPL-3.0'
+name = 'pallet-access-token'
+repository = 'https://github.com/myriadsocial/myriad-node'
+version = '0.0.1'
+
+[package.metadata.docs.rs]
+targets = ['x86_64-unknown-linux-gnu']
+
+[dependencies]
+# External Dependencies
+codec = { package = 'parity-scale-codec', version = '3.1.5', default-features = false, features = ['derive', 'max-encoded-len'] }
+scale-info = { version = '2.9.0', default-features = false, features = ['derive'] }
+
+# Substrate Dependencies
+frame-benchmarking = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0', default-features = false, optional = true }
+frame-support = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0', default-features = false }
+frame-system = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0', default-features = false }
+pallet-balances = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0', default-features = false }
+sp-std = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0', default-features = false }
+
+[dev-dependencies]
+# External Dependencies
+hex-literal = { version = '0.4.1', default-features = false }
+serde = { version = '1.0.188', default-features = false }
+
+# Substrate Dependencies
+sp-core = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0', default-features = false }
+sp-io = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0', default-features = false }
+sp-runtime = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0', default-features = false }
+
+[features]
+default = ['std']
+runtime-benchmarks = ['frame-benchmarking/runtime-benchmarks']
+std = [
+	# External Dependencies
+	'codec/std',
+	'scale-info/std',
+
+	# Substrate Dependencies
+	'frame-support/std',
+	'frame-system/std',
+	'pallet-balances/std',
+	'sp-std/std',
+]
+
+try-runtime = ['frame-support/try-runtime']
