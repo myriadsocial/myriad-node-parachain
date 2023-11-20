@@ -37,7 +37,7 @@ pub mod pallet {
 
 	use frame_support::{
 		dispatch::DispatchResultWithPostInfo,
-		traits::{Currency, Get},
+		traits::Get,
 		Blake2_128Concat,
 	};
 	use frame_system::pallet_prelude::*;
@@ -45,7 +45,6 @@ pub mod pallet {
 
 	#[pallet::config]
 	pub trait Config: frame_system::Config + pallet_timestamp::Config {
-		type Currency: Currency<<Self as frame_system::Config>::AccountId>;
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 		type WeightInfo: WeightInfo;
 	}
@@ -99,7 +98,7 @@ pub mod pallet {
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
 		#[pallet::call_index(0)]
-		#[pallet::weight(<T as pallet::Config>::::WeightInfo::unregister())]
+		#[pallet::weight(<T as pallet::Config>::WeightInfo::unregister())]
 		pub fn create(
 			origin: OriginFor<T>,
 			hash: HashOf<T>,
@@ -117,7 +116,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(1)]
-		#[pallet::weight(<T as pallet::Config>::::WeightInfo::unregister())]
+		#[pallet::weight(<T as pallet::Config>::WeightInfo::unregister())]
 		pub fn revoke(origin: OriginFor<T>, hash: HashOf<T>) -> DispatchResultWithPostInfo {
 			let who = ensure_signed(origin)?;
 
@@ -131,7 +130,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(2)]
-		#[pallet::weight(<T as pallet::Config>::::WeightInfo::unregister())]
+		#[pallet::weight(<T as pallet::Config>::WeightInfo::unregister())]
 		pub fn revoke_all(origin: OriginFor<T>) -> DispatchResultWithPostInfo {
 			let who = ensure_signed(origin)?;
 
@@ -145,7 +144,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(3)]
-		#[pallet::weight(<T as pallet::Config>::::WeightInfo::unregister())]
+		#[pallet::weight(<T as pallet::Config>::WeightInfo::unregister())]
 		pub fn revoke_all_by_scopes(
 			origin: OriginFor<T>,
 			scopes: Scopes<TimelineId>,
