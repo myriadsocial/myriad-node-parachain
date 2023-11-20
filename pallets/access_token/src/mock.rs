@@ -1,4 +1,4 @@
-use crate as pallet_server;
+use crate as pallet_access_token;
 
 use sp_core::{sr25519, Pair, H256};
 use sp_io::TestExternalities;
@@ -12,7 +12,6 @@ use frame_support::{
 };
 use frame_system as system;
 
-use pallet_balances::AccountData;
 
 type Block = system::mocking::MockBlock<Test>;
 type Balance = u64;
@@ -21,8 +20,8 @@ construct_runtime!(
 	pub enum Test
 	{
 		System: system::{Pallet, Call, Config<T>, Storage, Event<T>},
-		Server: pallet_server::{Pallet, Call, Storage, Event<T>},
-		Balances: pallet_balances::{Pallet, Call, Storage, Event<T>},
+		AccessToken: pallet_access_token::{Pallet, Call, Storage, Event<T>},
+		Timestamp: pallet_timestamp,
 	}
 );
 
@@ -49,7 +48,7 @@ impl system::Config for Test {
 	type BlockHashCount = BlockHashCount;
 	type Version = ();
 	type PalletInfo = PalletInfo;
-	type AccountData = AccountData<Balance>;
+	type AccountData = ();
 	type OnNewAccount = ();
 	type OnKilledAccount = ();
 	type SystemWeightInfo = ();
@@ -62,34 +61,24 @@ parameter_types! {
 	pub static ExistentialDeposit: Balance = 1;
 }
 
-impl pallet_balances::Config for Test {
-	type AccountStore = System;
-	type Balance = Balance;
-	type DustRemoval = ();
-	type ExistentialDeposit = ExistentialDeposit;
-	type MaxLocks = ();
-	type MaxReserves = ();
-	type ReserveIdentifier = [u8; 8];
-	type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = ();
-	type RuntimeHoldReason = RuntimeHoldReason;
-	type FreezeIdentifier = ();
-	type MaxHolds = ConstU32<0>;
-	type MaxFreezes = ConstU32<0>;
-}
+pub type Moment = u64;
+pub const MILLISECS_PER_BLOCK: Moment = 6000;
+pub const SLOT_DURATION: Moment = MILLISECS_PER_BLOCK;
 
 parameter_types! {
-	pub const MinimumStakeAmount: u64 = 3;
-	pub const ScheduledBlockTime: u32 = 10;
-	pub const MaxScheduledPerBlock: u32 = 5;
+	pub const MinimumPeriod: Moment = SLOT_DURATION / 2;
 }
 
-impl pallet_server::Config for Test {
-	type Currency = Balances;
-	type MaxScheduledPerBlock = MaxScheduledPerBlock;
-	type MinimumStakeAmount = MinimumStakeAmount;
+impl pallet_timestamp::Config for Test {
+	/// A timestamp: milliseconds since the unix epoch.
+	type Moment = Moment;
+	type OnTimestampSet = ();
+	type MinimumPeriod = MinimumPeriod;
+	type WeightInfo = ();
+}
+
+impl pallet_access_token::Config for Test {
 	type RuntimeEvent = RuntimeEvent;
-	type ScheduledBlockTime = ScheduledBlockTime;
 	type WeightInfo = ();
 }
 
@@ -111,17 +100,6 @@ impl ExternalityBuilder {
 		let bob_public = account_key("bob");
 		let john_public = account_key("john");
 		let satoshi_public = account_key("satoshi");
-
-		pallet_balances::GenesisConfig::<Test> {
-			balances: vec![
-				(alice_public, 10),
-				(bob_public, 20),
-				(john_public, 30),
-				(satoshi_public, 2),
-			],
-		}
-		.assimilate_storage(&mut t)
-		.unwrap();
 
 		let mut ext = TestExternalities::new(t);
 		ext.execute_with(|| System::set_block_number(1));
