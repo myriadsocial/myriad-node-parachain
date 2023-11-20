@@ -11,7 +11,7 @@ pub use pallet::*;
 pub use scale_info::TypeInfo;
 
 pub mod functions;
-pub mod impl_server;
+pub mod impl_access_token;
 pub mod interface;
 pub mod types;
 pub mod weights;
