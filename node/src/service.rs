@@ -16,7 +16,8 @@ use cumulus_client_consensus_common::{
 };
 use cumulus_client_service::{
 	build_network, build_relay_chain_interface, prepare_node_config, start_collator,
-	start_full_node, BuildNetworkParams, CollatorSybilResistance, StartCollatorParams, StartFullNodeParams,
+	start_full_node, BuildNetworkParams, CollatorSybilResistance, StartCollatorParams,
+	StartFullNodeParams,
 };
 use cumulus_primitives_core::ParaId;
 use cumulus_relay_chain_interface::RelayChainInterface;

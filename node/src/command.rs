@@ -282,9 +282,7 @@ pub fn run() -> Result<()> {
 				info!("Parachain Account: {parachain_account}");
 				info!("Is collating: {}", if config.role.is_authority() { "yes" } else { "no" });
 
-				if !cli.run.relay_chain_rpc_urls.is_empty()
-					&& !cli.relay_chain_args.is_empty()
-				{
+				if !cli.run.relay_chain_rpc_urls.is_empty() && !cli.relay_chain_args.is_empty() {
 					warn!(
 						"Detected relay chain node arguments together with --relay-chain-rpc-url. \
 						   This command starts a minimal Polkadot node that only uses a \

@@ -25,6 +25,7 @@ smallvec = '1.11.0'
 # Local
 pallet-server = { path = '../pallets/server', default-features = false }
 pallet-tipping = { path = '../pallets/tipping', default-features = false }
+pallet-access-token = { path = '../pallets/access_token', default-features = false }
 
 # Substrate
 frame-benchmarking = { git = 'https://github.com/paritytech/polkadot-sdk', default-features = false, optional = true, branch = 'release-polkadot-v1.2.0' }
@@ -145,6 +146,7 @@ std = [
 	# Local Dependencies
 	'pallet-server/std',
 	'pallet-tipping/std',
+	'pallet-access-token/std',
 ]
 
 runtime-benchmarks = [

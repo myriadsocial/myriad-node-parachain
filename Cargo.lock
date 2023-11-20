@@ -5834,6 +5834,7 @@ dependencies = [
  "frame-try-runtime",
  "hex-literal",
  "log",
+ "pallet-access-token",
  "pallet-assets",
  "pallet-aura",
  "pallet-authorship",

@@ -631,6 +631,11 @@ impl pallet_server::Config for Runtime {
 	type WeightInfo = ();
 }
 
+impl pallet_access_token::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type WeightInfo = ();
+}
+
 impl pallet_tipping::Config for Runtime {
 	type Assets = Assets;
 	type Currency = Balances;
@@ -680,6 +685,7 @@ construct_runtime!(
 		// Local pallets
 		Server: pallet_server = 50,
 		Tipping: pallet_tipping = 51,
+		AccessToken: pallet_access_token = 52,
 
 		// Temporary
 		Sudo: pallet_sudo = 255,
