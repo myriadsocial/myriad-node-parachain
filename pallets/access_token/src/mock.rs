@@ -12,7 +12,6 @@ use frame_support::{
 };
 use frame_system as system;
 
-
 type Block = system::mocking::MockBlock<Test>;
 type Balance = u64;
 
