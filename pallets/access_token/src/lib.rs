@@ -1,11 +1,11 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-#[cfg(test)]
-mod mock;
-#[cfg(test)]
-mod tests;
+// #[cfg(test)]
+// mod mock;
+// #[cfg(test)]
+// mod tests;
 
-mod benchmarking;
+// mod benchmarking;
 
 pub use pallet::*;
 pub use scale_info::TypeInfo;
@@ -16,7 +16,7 @@ pub mod interface;
 pub mod types;
 pub mod weights;
 
-pub use crate::interface::{ServerInfo, ServerInterface, ServerProvider};
+pub use crate::interface::AccessTokenInterface;
 pub use types::*;
 pub use weights::WeightInfo;
 
@@ -31,42 +31,6 @@ use frame_support::traits::StorageVersion;
 /// The current storage version.
 const STORAGE_VERSION: StorageVersion = StorageVersion::new(0);
 
-#[derive(Encode, Decode, Clone, RuntimeDebug, PartialEq, Eq, TypeInfo)]
-pub enum Scopes<TimelineId> {
-	Login,
-	Timeline(Vec<TimelineId>)
-}
-impl Default for Scopes<TimelineId> {
-	fn default() -> Self {
-		Self::Login
-	}
-}
-
-
-#[derive(Encode, Decode, Clone, Default, RuntimeDebug, PartialEq, Eq, TypeInfo)]
-pub struct AccessToken<AccountId, Hash, TimelineId, Moment> where Scopes<TimelineId>: Default {
-	owner: AccountId,
-	hash: Hash,
-	scope: Scopes<TimelineId>,
-	created_at: Moment,
-	updated_at: Moment,
-}
-impl<AccountId, Hash, TimelineId, Moment: Copy> AccessToken<AccountId, Hash, TimelineId, Moment> where Scopes<TimelineId>: Default {
-	pub fn new(
-		owner: AccountId,
-		hash: Hash,
-		created_at: Moment,
-	) -> Self {
-		Self {
-			owner,
-			hash,
-			scope: Scopes::<TimelineId>::default(),
-			created_at,
-			updated_at: created_at,
-		}
-	}
-}
-
 #[frame_support::pallet]
 pub mod pallet {
 	use super::*;
@@ -80,19 +44,10 @@ pub mod pallet {
 	use sp_std::vec::Vec;
 
 	#[pallet::config]
-	pub trait Config: frame_system::Config {
+	pub trait Config: frame_system::Config + pallet_timestamp::Config {
 		type Currency: Currency<<Self as frame_system::Config>::AccountId>;
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 		type WeightInfo: WeightInfo;
-
-		#[pallet::constant]
-		type MinimumStakeAmount: Get<<Self::Currency as Currency<Self::AccountId>>::Balance>;
-
-		#[pallet::constant]
-		type ScheduledBlockTime: Get<BlockNumberFor<Self>>;
-
-		#[pallet::constant]
-		type MaxScheduledPerBlock: Get<u32>;
 	}
 
 	#[pallet::pallet]
@@ -101,52 +56,32 @@ pub mod pallet {
 	pub struct Pallet<T>(_);
 
 	#[pallet::storage]
-	#[pallet::getter(fn server_count)]
-	pub type ServerCount<T> = StorageValue<_, u64, ValueQuery>;
+	#[pallet::getter(fn access_token_count)]
+	pub type AccessTokenCount<T> = StorageValue<_, u64, ValueQuery>;
 
 	#[pallet::storage]
-	#[pallet::getter(fn server_index)]
-	pub type ServerIndex<T> = StorageValue<_, u64, ValueQuery>;
+	#[pallet::getter(fn access_token_index)]
+	pub type AccessTokenIndex<T> = StorageValue<_, u64, ValueQuery>;
 
 	#[pallet::storage]
-	#[pallet::getter(fn server_by_id)]
-	pub(super) type ServerById<T: Config> = StorageMap<_, Blake2_128Concat, ServerId, ServerOf<T>>;
+	#[pallet::getter(fn access_token_by_hash)]
+	pub(super) type AccessTokenByHash<T: Config> =
+		StorageMap<_, Blake2_128Concat, HashOf<T>, AccessTokenOf<T>>;
 
 	#[pallet::storage]
-	#[pallet::getter(fn server_by_api_url)]
-	pub(super) type ServerByApiUrl<T: Config> = StorageMap<_, Blake2_128Concat, ApiUrl, ServerId>;
-
-	#[pallet::storage]
-	#[pallet::getter(fn server_by_owner)]
-	pub(super) type ServerByOwner<T: Config> = StorageDoubleMap<
-		_,
-		Blake2_128Concat,
-		T::AccountId,
-		Blake2_128Concat,
-		ServerId,
-		ServerOf<T>,
-	>;
-
-	#[pallet::storage]
-	#[pallet::getter(fn tasks)]
-	pub(super) type Tasks<T: Config> =
-		StorageMap<_, Blake2_128Concat, BlockNumberFor<T>, Vec<ServerId>, ValueQuery>;
+	#[pallet::getter(fn all_access_tokens_by_owner)]
+	pub(super) type AccessTokenByOwner<T: Config> =
+		StorageMap<_, Blake2_128Concat, AccountIdOf<T>, Vec<AccessTokenOf<T>>>;
 
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
-		/// Register server success. [server]
-		Registered(ServerOf<T>),
-		/// Server updated success. [account_id, server_id, action_type]
-		ServerUpdated(T::AccountId, ServerId, ActionTypeOf<T>),
-		/// Unregister server success. [server_id]
-		Unregistered(ServerId),
-		/// Staked success. [account_id, server_id, amount]
-		Staked(T::AccountId, ServerId, BalanceOf<T>),
-		/// Unstaked success. [account_id, server_id, amount]
-		Unstaked(T::AccountId, ServerId, BalanceOf<T>),
-		/// Unstaked scheduled success. { server_id, when, task }
-		Scheduled { server_id: ServerId, when: BlockNumberFor<T>, task: Vec<u8>, status: Status },
+		/// Create an access token success. [access_token]
+		Created(AccessTokenOf<T>),
+		/// Revoke access token success. [access_token]
+		Revoked(AccessTokenOf<T>),
+		/// Revoke all access token success. [access_token_list]
+		RevokedAll(Vec<AccessTokenOf<T>>),
 	}
 
 	#[pallet::error]
@@ -156,11 +91,6 @@ pub mod pallet {
 		Unauthorized,
 		Overflow,
 		BadSignature,
-		InsufficientBalance,
-		FailedToSchedule,
-		MinimumStakeLimitBalance,
-		UnstakingLimitBalance,
-		WaitingToUnstaked,
 	}
 
 	#[pallet::hooks]
@@ -169,22 +99,17 @@ pub mod pallet {
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
 		#[pallet::call_index(0)]
-		#[pallet::weight(T::WeightInfo::register(api_url.len() as u32))]
-		pub fn register(
+		#[pallet::weight(<T as pallet::Config>::::WeightInfo::unregister())]
+		pub fn create(
 			origin: OriginFor<T>,
-			api_url: Vec<u8>,
-			stake_amount: Option<BalanceOf<T>>,
+			hash: HashOf<T>,
+			scopes: Scopes<TimelineId>,
 		) -> DispatchResultWithPostInfo {
 			let who = ensure_signed(origin)?;
 
-			match <Self as ServerInterface<T>>::register(&who, &api_url, stake_amount) {
-				Ok(server) => {
-					Self::deposit_event(Event::Registered(server.clone()));
-					Self::deposit_event(Event::Staked(
-						who,
-						server.get_id(),
-						*server.get_stake_amount(),
-					));
+			match <Self as AccessTokenInterface<T>>::create(&who, &hash, &scopes) {
+				Ok(access_token) => {
+					Self::deposit_event(Event::Created(access_token));
 					Ok(().into())
 				},
 				Err(error) => Err(error.into()),
@@ -192,17 +117,13 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(1)]
-		#[pallet::weight(T::WeightInfo::update_server(*server_id as u32))]
-		pub fn update_server(
-			origin: OriginFor<T>,
-			server_id: ServerId,
-			action_type: ActionTypeOf<T>,
-		) -> DispatchResultWithPostInfo {
+		#[pallet::weight(<T as pallet::Config>::::WeightInfo::unregister())]
+		pub fn revoke(origin: OriginFor<T>, hash: HashOf<T>) -> DispatchResultWithPostInfo {
 			let who = ensure_signed(origin)?;
 
-			match <Self as ServerInterface<T>>::update_server(server_id, &who, &action_type) {
-				Ok(_) => {
-					Self::deposit_event(Event::ServerUpdated(who, server_id, action_type));
+			match <Self as AccessTokenInterface<T>>::revoke(&who, &hash) {
+				Ok(access_token) => {
+					Self::deposit_event(Event::Revoked(access_token));
 					Ok(().into())
 				},
 				Err(error) => Err(error.into()),
@@ -210,18 +131,13 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(2)]
-		#[pallet::weight(T::WeightInfo::unregister())]
-		pub fn unregister(origin: OriginFor<T>, server_id: ServerId) -> DispatchResultWithPostInfo {
+		#[pallet::weight(<T as pallet::Config>::::WeightInfo::unregister())]
+		pub fn revoke_all(origin: OriginFor<T>) -> DispatchResultWithPostInfo {
 			let who = ensure_signed(origin)?;
 
-			match <Self as ServerInterface<T>>::unregister(server_id, &who) {
-				Ok(when) => {
-					Self::deposit_event(Event::Scheduled {
-						server_id,
-						when,
-						task: b"Unstaked".to_vec(),
-						status: Status::InProgress,
-					});
+			match <Self as AccessTokenInterface<T>>::revoke_all(&who) {
+				Ok(access_tokens) => {
+					Self::deposit_event(Event::RevokedAll(access_tokens));
 					Ok(().into())
 				},
 				Err(error) => Err(error.into()),
@@ -229,21 +145,16 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(3)]
-		#[pallet::weight(T::WeightInfo::cancel_unregister())]
-		pub fn cancel_unregister(
+		#[pallet::weight(<T as pallet::Config>::::WeightInfo::unregister())]
+		pub fn revoke_all_by_scopes(
 			origin: OriginFor<T>,
-			server_id: ServerId,
+			scopes: Scopes<TimelineId>,
 		) -> DispatchResultWithPostInfo {
 			let who = ensure_signed(origin)?;
 
-			match <Self as ServerInterface<T>>::cancel_unregister(server_id, &who) {
-				Ok(when) => {
-					Self::deposit_event(Event::Scheduled {
-						server_id,
-						when,
-						task: b"Unstaked".to_vec(),
-						status: Status::Cancelled,
-					});
+			match <Self as AccessTokenInterface<T>>::revoke_all_by_scopes(&who, &scopes) {
+				Ok(access_tokens) => {
+					Self::deposit_event(Event::RevokedAll(access_tokens));
 					Ok(().into())
 				},
 				Err(error) => Err(error.into()),

@@ -6238,6 +6238,7 @@ dependencies = [
  "frame-system",
  "hex-literal",
  "pallet-balances",
+ "pallet-timestamp",
  "parity-scale-codec",
  "scale-info",
  "serde",

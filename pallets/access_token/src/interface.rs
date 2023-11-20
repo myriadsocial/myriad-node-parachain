@@ -1,41 +1,23 @@
 use frame_system::pallet_prelude::BlockNumberFor;
 use sp_std::vec::Vec;
 
-pub trait ServerInfo<T: frame_system::Config> {
-	fn get_id(&self) -> u64;
-	fn get_owner(&self) -> &T::AccountId;
-	fn get_api_url(&self) -> &Vec<u8>;
-}
-
-pub trait ServerProvider<T: frame_system::Config> {
+pub trait AccessTokenInterface<T: frame_system::Config> {
 	type Error;
-	type Server: ServerInfo<T> + sp_std::fmt::Debug;
+	type AccessToken;
+	type Scopes;
 
-	fn get_by_id(server_id: u64) -> Option<Self::Server>;
-}
-
-pub trait ServerInterface<T: frame_system::Config> {
-	type Error;
-	type Server;
-	type Balance: Copy;
-	type ActionType;
-
-	fn register(
+	fn create(
 		owner: &T::AccountId,
-		api_url: &[u8],
-		stake_amount: Option<Self::Balance>,
-	) -> Result<Self::Server, Self::Error>;
+		hash: &T::Hash,
+		scopes: &Self::Scopes,
+	) -> Result<Self::AccessToken, Self::Error>;
 
-	fn update_server(
-		server_id: u64,
+	fn revoke(owner: &T::AccountId, hash: &T::Hash) -> Result<Self::AccessToken, Self::Error>;
+
+	fn revoke_all(owner: &T::AccountId) -> Result<Vec<Self::AccessToken>, Self::Error>;
+
+	fn revoke_all_by_scopes(
 		owner: &T::AccountId,
-		action: &Self::ActionType,
-	) -> Result<(), Self::Error>;
-
-	fn unregister(server_id: u64, owner: &T::AccountId) -> Result<BlockNumberFor<T>, Self::Error>;
-
-	fn cancel_unregister(
-		server_id: u64,
-		owner: &T::AccountId,
-	) -> Result<BlockNumberFor<T>, Self::Error>;
+		scopes: &Self::Scopes,
+	) -> Result<Vec<Self::AccessToken>, Self::Error>;
 }
