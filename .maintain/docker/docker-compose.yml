@@ -9,15 +9,7 @@ services:
       dockerfile: .maintain/docker/Dockerfile
     volumes:
       - data:/data
-    command: >
-      --base-path .local \
-      --dev \
-      --alice \
-      --collator \
-      --force-authoring \
-      -- \
-      --execution wasm \
-      --dev
+    command: --dev
     ports:
       - 30333:30333
       - 9933:9933
