@@ -1,5 +1,5 @@
 use crate::{mock::*, Error, Receipt, References, TipsBalance, TipsBalanceInfo};
-use frame_support::{assert_noop, assert_ok, dispatch::DispatchError};
+use frame_support::{assert_noop, assert_ok, sp_runtime::DispatchError};
 
 #[test]
 fn pay_content_with_myria_works() {
