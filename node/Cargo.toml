@@ -61,8 +61,10 @@ polkadot-service = { git = 'https://github.com/paritytech/polkadot-sdk.git', bra
 
 # Cumulus
 cumulus-client-cli = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0' }
+cumulus-client-collator = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0' }
 cumulus-client-consensus-aura = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0' }
 cumulus-client-consensus-common = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0' }
+cumulus-client-consensus-proposer = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0' }
 cumulus-client-service = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0' }
 cumulus-primitives-core = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0' }
 cumulus-primitives-parachain-inherent = { git = 'https://github.com/paritytech/polkadot-sdk.git', branch = 'release-polkadot-v1.2.0' }

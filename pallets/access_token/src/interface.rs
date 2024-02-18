@@ -1,4 +1,3 @@
-use frame_system::pallet_prelude::BlockNumberFor;
 use sp_std::vec::Vec;
 
 pub trait AccessTokenInterface<T: frame_system::Config> {

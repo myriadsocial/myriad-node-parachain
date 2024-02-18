@@ -35,7 +35,7 @@ const STORAGE_VERSION: StorageVersion = StorageVersion::new(0);
 pub mod pallet {
 	use super::*;
 
-	use frame_support::{dispatch::DispatchResultWithPostInfo, traits::Get, Blake2_128Concat};
+	use frame_support::{dispatch::DispatchResultWithPostInfo, Blake2_128Concat};
 	use frame_system::pallet_prelude::*;
 	use sp_std::vec::Vec;
 

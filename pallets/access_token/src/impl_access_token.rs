@@ -1,6 +1,4 @@
 use super::*;
-use frame_support::traits::{ExistenceRequirement, Get};
-use frame_system::pallet_prelude::BlockNumberFor;
 use sp_std::vec::Vec;
 
 impl<T: Config + pallet_timestamp::Config> AccessTokenInterface<T> for Pallet<T> {
@@ -36,7 +34,7 @@ impl<T: Config + pallet_timestamp::Config> AccessTokenInterface<T> for Pallet<T>
 	}
 
 	fn revoke(owner: &T::AccountId, hash: &T::Hash) -> Result<Self::AccessToken, Self::Error> {
-		let access_token = AccessTokenByHash::<T>::get(hash)
+		let _access_token = AccessTokenByHash::<T>::get(hash)
 			.ok_or(Error::<T>::NotExists)?
 			.is_authorized(owner)
 			.ok_or(Error::<T>::Unauthorized)?;
