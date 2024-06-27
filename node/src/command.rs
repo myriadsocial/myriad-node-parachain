@@ -53,6 +53,7 @@ impl SubstrateCli for Cli {
 			"dev" => Box::new(chain_spec::development_config()?),
 			"local" | "" => Box::new(chain_spec::local_config()?),
 			"rococo" => Box::new(chain_spec::rococo_config()?),
+			"paseo" => Box::new(chain_spec::paseo_config()?),
 			path => {
 				Box::new(chain_spec::ChainSpec::from_json_file(std::path::PathBuf::from(path))?)
 			},

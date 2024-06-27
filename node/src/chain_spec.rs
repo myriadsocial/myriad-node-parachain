@@ -84,6 +84,10 @@ pub fn rococo_config() -> Result<ChainSpec, String> {
 	ChainSpec::from_json_bytes(&include_bytes!("../res/rococo-parachain.json")[..])
 }
 
+pub fn paseo_config() -> Result<ChainSpec, String> {
+	ChainSpec::from_json_bytes(&include_bytes!("../res/paseo-parachain.json")[..])
+}
+
 pub fn local_config() -> Result<ChainSpec, String> {
 	let properties = get_properties("MYRIA", 18, 42);
 
@@ -136,7 +140,7 @@ pub fn local_config() -> Result<ChainSpec, String> {
 		Some(properties),
 		// Extensions
 		Extensions {
-			relay_chain: "rococo-local".into(), // You MUST set this to the correct network!
+			relay_chain: "paseo-local".into(), // You MUST set this to the correct network!
 			para_id: DEFAULT_PARA_ID.into(),
 		},
 	))
@@ -194,7 +198,7 @@ pub fn development_config() -> Result<ChainSpec, String> {
 		Some(properties),
 		// Extensions
 		Extensions {
-			relay_chain: "rococo-local".into(), // You MUST set this to the correct network!
+			relay_chain: "paseo-local".into(), // You MUST set this to the correct network!
 			para_id: DEFAULT_PARA_ID.into(),
 		},
 	))
