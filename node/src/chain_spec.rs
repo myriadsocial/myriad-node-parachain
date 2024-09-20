@@ -85,7 +85,7 @@ pub fn rococo_config() -> Result<ChainSpec, String> {
 }
 
 pub fn paseo_config() -> Result<ChainSpec, String> {
-	ChainSpec::from_json_bytes(&include_bytes!("../res/paseo-parachain.json")[..])
+	ChainSpec::from_json_bytes(&include_bytes!("../res/paseo-parachain-chainspec.json")[..])
 }
 
 pub fn local_config() -> Result<ChainSpec, String> {

@@ -24,11 +24,8 @@ Starting with Myriad.Social, we are creating a platform where social app, metave
 3. [Single-Node Development Chain](#single-node-development-chain)
 4. [Run in Docker](#run-in-docker)
 5. [Migrating Octopus Appchain to Rococo Parachain](#migrating-octopus-appchain-to-rococo-parachain)
-6. [Fork the Substrate Cumulus Node Parachain Template Repository](#1-fork-the-substrate-cumulus-node-parachain-template-repository)
-7. [Define Chain Specification Configuration](#2-define-chain-specification-configuration)
-8. [Replace Parachain Template Runtime](#3-replace-parachain-template-runtime)
-9. [Move Octopus Application Pallets](#4-move-octopus-application-pallets)
-10. [Move Octopus Application Pallets](#4-move-octopus-application-pallets)
+6. [Guide to Testing the Project Using Docker](#guide-to-testing-the-project-using-docker)
+7. [Myriad Social on Paseo Network](#myriad-social-on-paseo-network)
 
 ---
 
@@ -189,6 +186,32 @@ Navigate to your project's directory and build the Docker image:
 cd /path/to/your/myriad-node-parachain
 docker build -t substrate-test .
 ```
+
+---
+
+## Myriad Social on Paseo Network
+
+<div align="center">
+<img src="https://raw.githubusercontent.com/agustinustheo/apps/1b55f22c955dd9f0077ba0fac962d8da5bfa9f64/packages/apps-config/src/ui/logos/nodes/myriadPaseo.svg" width="200">
+</div>
+
+<br />
+
+Myriad Social has been successfully integrated as a Parachain in the Paseo network with the ParaID 4005.
+
+This integration brings enhanced functionality and connectivity to the Myriad ecosystem.
+
+### Accessing Myriad Social on Paseo
+
+You can access Myriad Social on the Paseo network via the following RPC endpoint:
+
+```
+wss://ws-rpc.paseo.myriad.social
+```
+
+This WebSocket RPC endpoint allows you to interact with the Myriad Social parachain on the Paseo network, enabling you to leverage the full capabilities of the integrated platform.
+
+For developers and users looking to connect to or interact with Myriad Social on Paseo, simply use this RPC endpoint in your configuration or connection settings.
 
 ---
 
